@@ -100,7 +100,7 @@ class FormInput extends React.Component {
                         id={id}
                         endAdornment={endAdornment}
                         value={this.state[id] || ''}
-                        onChange={this.handleChange(id, undefined, undefined)}
+                        onChange={this.handleChange(id, undefined, validations)}
                     /> : ''}
                     
                     {this.state.errorFlag ?
