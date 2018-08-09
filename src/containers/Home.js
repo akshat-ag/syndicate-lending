@@ -4,19 +4,7 @@ import {Route, Redirect, Switch} from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Footer from '../presentation/Footer';
 import LoanApplication from './LoanApplication';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import blueGrey from '@material-ui/core/colors/blueGrey';
-import cyan from '@material-ui/core/colors/cyan';
-import pink from '@material-ui/core/colors/pink';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#263238' 
-    },
-    secondary: cyan,
-  }
-});
 
 class Home extends Component {
     componentDidMount() {
@@ -24,7 +12,6 @@ class Home extends Component {
     }
     render() {
         return (
-            <MuiThemeProvider theme={theme}>
             <React.Fragment>
              <Header/>
              <div id="main-content">
@@ -36,7 +23,6 @@ class Home extends Component {
             </div>
             <Footer/>
             </React.Fragment>
-            </MuiThemeProvider>
 
         );
     }
