@@ -72,7 +72,7 @@ class MultipleSelect extends React.Component {
     const { classes, theme } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div className={classes.root} id="selectleadArranger">
         
         <FormControl id="selectleadArranger" className={classes.formControl}>
           <InputLabel htmlFor="select-multiple-checkbox">Select Lead Arranger(s)</InputLabel>

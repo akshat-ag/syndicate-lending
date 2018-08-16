@@ -22,7 +22,10 @@
 .App-intro {
   font-size: large;
 }
-
+#main-content {
+  margin-left: 20px;
+  margin-right: 20px;
+}
 #app1 {}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
@@ -35,7 +38,6 @@ h3 {
   /*float: left;*/
   /*padding-left: 225px;
   width: 70%;*/
-  padding-left: 35px;
   width: 80%;
 }
 
@@ -61,11 +63,11 @@ label {
   margin-top: 0px;
 }
 #LoanTitle {
-  margin-bottom: 0px;
+  margin-bottom: 7px;
   margin-top: 30px;
 }
 #loanform {
-  margin-top: 20px;
+  
   display: flex;
   width: 100%;
 }
@@ -81,9 +83,17 @@ label {
 .container {
   padding-top: 15px;
 }
+.container1 {
+  padding-top: 24px;
+}
 #selectleadArranger {
   width:  -webkit-fill-available;
-  margin-top: 55px !important;
+  margin-top: 34px;
+
+}
+#multipleselect {
+   margin-left: 100px;
+    margin-top: -8px;
 }
 .dateInput {
   margin-top: 6px !important;
@@ -105,10 +115,35 @@ body {
 #footer {
   position: absolute;
   bottom: 0;
+
   width: -webkit-fill-available;
 }
 #submitBtn {
   margin-top: 50px;
     /* padding-left: 12px; */
     margin-left: 0px;
+}
+#borrowerDashboard {
+  padding-top: 4px;
+}
+.loanRow {
+  height: 36px !important;
+}
+#headRow {
+  height: 36px !important;
+}
+.loanRow a {
+   text-decoration: none;
+}
+.root1 {
+  margin-top: 45px;
+}
+#card  {
+  background-size: unset;
+}
+#leadSelect {
+  text-align: center;
+}
+#cardContainer {
+  margin-top: 44px;
 }

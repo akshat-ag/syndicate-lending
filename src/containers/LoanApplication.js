@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+ import React, {Component} from 'react';
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 
@@ -64,14 +64,15 @@ class LoanApplication extends Component {
 	    event.preventDefault();
 
 	    const postObj = {
-	      loanNumber: this.state.loanNo,
-	      loanAmount: this.state.loanAmt,
+	      requisitionAmount: this.state.loanAmt,
 	      leadArrangers: this.state.leadArrangers,
 	      firstName: this.state.firstName,
 	      lastName: this.state.lastName,
 	      emailId: this.state.emailId,
-	      start_date: this.state.start_date,
-	      end_date: this.state.end_date
+	      startDate: this.state.start_date,
+	      endDate: this.state.end_date,
+	      institutionName: this.state.institutionName,
+	      mobileNo: this.state.mobileNo
 	    };
 
 	    axios.post(`https://jsonplaceholder.typicode.com/users`, { postObj })
@@ -111,7 +112,7 @@ class LoanApplication extends Component {
         			</Grid>
         			<Grid item xs={3} className="borrInput">
           				<FormControl fullWidth className={classes.margin}>
-          				<InputLabel htmlFor="start-date" disableAnimation required>Start Date</InputLabel>
+          				<InputLabel htmlFor="start-date" disableAnimation={true} required>Start Date</InputLabel>
 				          <Input
 				          	type="date"
 				            id="start-date"
@@ -135,7 +136,20 @@ class LoanApplication extends Component {
 		     	  <h3 id="LoanTitle"> Borrower Information </h3>
 			
 			<Grid  container spacing={16} className="container">
+		     	 
 		     	 	<Grid item xs={3}>
+          				<FormControl fullWidth className={classes.margin}>
+          				<InputLabel htmlFor="institution-name" required>Institution Name</InputLabel>
+				          <Input
+				            id="institution-name"
+				            required
+				            value={this.state.institutionName}
+				            onChange= {this.handleChange("institutionName")}
+				            startAdornment={<InputAdornment position="start"></InputAdornment>}
+				          />
+        				</FormControl>
+        			</Grid>
+        			<Grid item xs={3} className="borrInput">
           				<FormControl fullWidth className={classes.margin}>
           				<InputLabel htmlFor="first-name" required>First Name</InputLabel>
 				          <Input
@@ -159,7 +173,9 @@ class LoanApplication extends Component {
 				          />
         				</FormControl>
         			</Grid>
-        			<Grid item xs={3} className="borrInput">
+        			</Grid>
+        			<Grid container spacing={16} className="container1">
+        			<Grid item xs={3} >
           				<FormControl fullWidth className={classes.margin}>
           				<InputLabel htmlFor="emailId" required>Email Address</InputLabel>
 				          <Input
@@ -171,6 +187,21 @@ class LoanApplication extends Component {
 				          />
         				</FormControl>
         			</Grid>
+        			
+        			
+        			<Grid item xs={3} className="borrInput">
+          				<FormControl fullWidth className={classes.margin}>
+          				<InputLabel htmlFor="mobile" required>Mobile Number</InputLabel>
+				          <Input
+				          	type="number"
+				            id="mobile"
+				            value={this.state.mobileNo}
+				            onChange= {this.handleChange("mobileNo")}
+				            startAdornment={<InputAdornment position="start"></InputAdornment>}
+				          />
+        				</FormControl>
+        			</Grid>
+        			
 		     	 </Grid>
 		     	 <Grid item container justify="flex-start" xs={12}>
 			<Button type="submit" variant="contained" color="primary" id="submitBtn">
