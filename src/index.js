@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import cyan from '@material-ui/core/colors/cyan';
+import red from '@material-ui/core/colors/red';
 import Login from './containers/Login';
 import {AuthenticatedRoute} from './containers/AuthenticatedRoute';
 import App from './App';
@@ -13,7 +13,7 @@ const theme = createMuiTheme({
       primary: {
         main: '#263238' 
       },
-      secondary: cyan,
+      secondary: red,
     }
   });
 

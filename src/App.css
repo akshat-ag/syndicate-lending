@@ -26,7 +26,6 @@
   margin-left: 20px;
   margin-right: 20px;
 }
-#app1 {}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -146,4 +145,30 @@ body {
 }
 #cardContainer {
   margin-top: 44px;
+}
+#statusBank {
+  margin-bottom: 15px;
+  margin-top: 18px;
+  padding-left: 15px;
+}
+#acceptBtn {
+ 
+  text-align: center;
+  color: #fff;
+  
+  background: linear-gradient(#61e41f, #4b776a);
+
+  
+}
+#declineall {
+  margin-top: 100px;
+}
+.yellow {
+  color: #040404  !important;
+}
+.red {
+  color: red !important;
+}
+#loader {
+  margin-top: 100px;
 }

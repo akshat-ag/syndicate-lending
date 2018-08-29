@@ -7,9 +7,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography'
 import {NavLink} from 'react-router-dom'
 export default class Header extends React.Component {
-	constructor(props) {
-		super(props);
-	}
 	render() {
 		return (
 			 <div >
