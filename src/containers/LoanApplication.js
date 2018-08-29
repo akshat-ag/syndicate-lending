@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
-
+import { Redirect } from 'react-router-dom';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -14,6 +14,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from "@material-ui/core/Grid";
 import MultipleSelect from '../presentation/LeadArrangerSelect.js';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 // import MultipleSelect from '../views/leadArrangerS.js';
 import axios from 'axios';
 const styles = theme => ({
@@ -48,7 +50,8 @@ class LoanApplication extends Component {
 		this.state = {
 			loanNo: 123,
 			loanStatus: "Approved",
-			leadArrangers: []
+			leadArrangers: [],
+			redirect: false
 			}; 
 	}
 	handleChange = prop => event => {
@@ -65,25 +68,31 @@ class LoanApplication extends Component {
 
 	    const postObj = {
 	      requisitionAmount: this.state.loanAmt,
-	      leadArrangers: this.state.leadArrangers,
+	      leadArrangers: this.state.leadArrangers.toString(),
 	      firstName: this.state.firstName,
 	      lastName: this.state.lastName,
 	      emailId: this.state.emailId,
 	      startDate: this.state.start_date,
-	      endDate: this.state.end_date,
-	      institutionName: this.state.institutionName,
-	      mobileNo: this.state.mobileNo
+		  endDate: this.state.end_date,
+		  contact: this.state.mobileNo,
+	      institutionName: this.state.institutionName
+	      
 	    };
 
-	    axios.post(`https://jsonplaceholder.typicode.com/users`, { postObj })
+	    axios.post(`http://delvmplwindpark00:8080/requisition/`,  postObj )
 	      .then(res => {
 	        console.log(res);
-	        console.log(res.data);
+			console.log(res.data);
+			this.setState({redirect: true});
+			NotificationManager.success('Success message', 'Requisition Confirmed');
 	      })
   }
 	render() {
 		 const {classes} = this.props;
 		 console.log(this.state);
+		 if (this.state.redirect) {
+    		return <Redirect push to={`/dashboard`}/>;
+  		}
 		return (
 			<Grid container className="loan_app">
 			<Grid item xs={12}>
