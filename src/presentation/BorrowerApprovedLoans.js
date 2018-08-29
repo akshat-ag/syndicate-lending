@@ -28,6 +28,7 @@ function ApprovedLoans(props) {
   return (
     <div className="root1">
       <h3> Approved Loans</h3>
+      {(props.loanList.length) ? 
       <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
@@ -44,22 +45,22 @@ function ApprovedLoans(props) {
         <TableBody>
           {Object.keys(props.loanList).map(row => {
             return (
-              <TableRow key={props.loanList[row].requisitionId}>
+              <TableRow key={props.loanList[row].RequisitionNo}>
                 <TableCell component="th" scope="row">
-                  {props.loanList[row].requisitionId}
+                  {props.loanList[row].RequisitionNo}
                 </TableCell>
                 <TableCell numeric>{props.loanList[row].firstName}</TableCell>
                 <TableCell numeric>{props.loanList[row].lastName}</TableCell>
                 <TableCell numeric>{props.loanList[row].requisitionAmount}</TableCell>
                 <TableCell numeric>{props.loanList[row].requisitionFunded}</TableCell>
-                <TableCell numeric>{props.loanList[row].deadline}</TableCell>
+                <TableCell numeric>{props.loanList[row].EndDate}</TableCell>
                 <TableCell numeric>{props.loanList[row].rate}</TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-    </Paper>
+    </Paper> : <h4>No Approved Loans Available </h4>}
     </div>)
 }
 

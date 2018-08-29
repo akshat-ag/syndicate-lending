@@ -4,6 +4,8 @@ import PendingApplications from '../presentation/BorrowerPendingApplications';
 import ApprovedLoans from '../presentation/BorrowerApprovedLoans';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from "@material-ui/core/Grid";
 class Dashboard extends Component {
     constructor(props) {
     	super(props);
@@ -13,30 +15,20 @@ class Dashboard extends Component {
     	this.myCallback = this.myCallback.bind(this);
     }
     componentDidMount() {
-        axios.get(`/requisitions/reliance`)
+        axios.get(`http://delvmplwindpark00:8080/requisitions/abc`)
             .then(({ data: loanList }) => {
              // console.log('user', loanList);
             let approvedLoans = [];
             let pendingLoans = [];
             for( let i = 0, max = loanList.length; i < max ; i++ ){
-                if( loanList[i].status === "approved" ){
+                if( loanList[i].RequisitionStatus === "Approved" ){
                     approvedLoans.push(loanList[i]);
                 } else {
                     pendingLoans.push(loanList[i]);
                 }
             } 
             this.setState({ approvedLoans: approvedLoans, pendingLoans: pendingLoans });
-                         }); 
-
-        // let loans = {};
-        //     for( let i = 0, max = loanList.length; i < max ; i++ ){
-        //         if( loans[loanList[i].status] == undefined ){
-        //          loans[loanList[i].status] = [];
-        //         }
-        //         loans[loanList[i].status].push(loanList[i]);
-        //     } 
-        //     this.setState({ loans: loans }).bind(this);
-        //       console.log(loans);
+                         });
     }
     myCallback = (loanId) => {
     	this.setState({
@@ -51,16 +43,29 @@ class Dashboard extends Component {
   		}
         if(this.state.approvedLoans && this.state.pendingLoans) {
             return (
-                <div id="borrowerDashboard">
-    			<h3> Applications Pending for Lead Arranger Selection </h3>            
+                <div id="borrowerDa0shboard">
+                    <Grid container>
+                        <Grid item xs={12} sm={10} md={10}>
+    			<h3> Applications Pending for Lead Arranger Selection </h3>  
+                        
                   <PendingApplications loanList={this.state.pendingLoans}
                   redirectToLoan={this.myCallback} />
+                 </Grid>
+                 <Grid xs={12} sm={10} md={10}>
                 <ApprovedLoans loanList={this.state.approvedLoans} />
+                </Grid>
+                </Grid>
                 </div>
+                
             );
         }
         else {
-            return <div>Loading....</div>
+            return <Grid container  id="loader" justify="center" alignItems="center">
+                <Grid container item xs={12} justify="center">
+                <CircularProgress  size={50} thickness={4} />
+                </Grid>
+                
+                </Grid>
         }
     }
 }

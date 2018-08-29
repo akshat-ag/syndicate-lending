@@ -25,9 +25,11 @@ const styles = theme => ({
 function PendingApplications(props) {
  
   const { classes } = props;
+  //console.log(props.loanList + "aaaa");
   console.log(classes);
     return (
       <div >
+        {(props.loanList.length) ? 
         <Paper className={classes.root}>
         <Table className={classes.table}>
         <TableHead>
@@ -39,19 +41,19 @@ function PendingApplications(props) {
         <TableBody>
           {Object.keys(props.loanList).map(n => {
             return (
-              <TableRow className="loanRow" key={props.loanList[n].requisitionId}>
+              <TableRow className="loanRow" key={props.loanList[n].RequisitionNo}>
                 <TableCell padding="none" classes={{paddingNone: classes.paddingNone}}  scope="row">
-                  {`Loan Id ${props.loanList[n].requisitionId}`}
+                  {`Loan Id ${props.loanList[n].RequisitionNo}`}
                 </TableCell>
                 <TableCell  classes={{paddingNone: classes.paddingNone}}  numeric>
-                <NavLink id="view" to={`/loan/${props.loanList[n].requisitionId}`}>View</NavLink>
+                <NavLink id="view" to={`/loan/${props.loanList[n].RequisitionNo}`}>View</NavLink>
                 </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-      </Paper>
+      </Paper>  : <h4>No Pending Loans Available</h4>}
       </div>
     );
   
