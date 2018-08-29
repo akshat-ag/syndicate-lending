@@ -6,7 +6,8 @@ import Footer from '../presentation/Footer';
 import LoanApplication from './LoanApplication';
 import LoanDetails from './LoanDetails';
 
-
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 class Home extends Component {
     componentDidMount() {
         
@@ -15,6 +16,7 @@ class Home extends Component {
         return (
             <React.Fragment>
              <Header/>
+             <NotificationContainer />
              <div id="main-content">
                 <Switch>
                     <Redirect exact from="/" to="/dashboard"/>
@@ -25,7 +27,7 @@ class Home extends Component {
 
                 </Switch>
             </div>
-           
+        
             </React.Fragment>
 
         );
