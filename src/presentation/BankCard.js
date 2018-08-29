@@ -21,11 +21,30 @@ const styles = {
       paddingTop: 0,
       paddingLeft: 15,
       paddingRight: 0
-    }
+    },
   };
-  
   function SimpleMediaCard(props) {
     const { classes } = props;
+    console.log(props.bankDetails + "hey");
+    const status = props.bankDetails.Status.toUpperCase();
+    const acceptCallback = function () {
+        props.onSubmit(props.bankDetails.BankName);
+    };
+    const checkColor = (status) => {
+      let colorclass='';
+      switch(status) {
+        case 'Pending':
+          colorclass= 'yellow';
+          break;
+        case 'Declined':
+        colorclass= 'red';
+        break;
+        default:
+        colorclass= '';
+        break;
+      }
+      return colorclass;
+    }
     return (
       
         <Card className={classes.card}>
@@ -36,25 +55,25 @@ const styles = {
             title="ICICI Bank"
           />
           <CardContent className={classes.content}>
-            <Typography gutterBottom variant="headline" component="h4">
-              {props.bankDetails.firstName + " " + props.bankDetails.secondName}
+            <Typography gutterBottom variant="subheading" component="h5">
+              {props.bankDetails.ContactFirstName + " " + props.bankDetails.ContactLastName}
             </Typography>
             <Typography >
-                Loan Amount: {props.bankDetails.loanamount}
+                Loan Amount: {props.loanAmt}
             </Typography>
             <Typography >
-                Deadline: {props.bankDetails.deadline}
+                Deadline: {props.deadline}
             </Typography>
             <Typography >
-               Interest Rate: {props.bankDetails.rate}
+               Interest Rate: {props.bankDetails.Rate}
             </Typography>
           </CardContent>
-          {(props.bankDetails.status === "Rate Quoted") ?  <CardActions>
-            <Button size="small" color="primary">
+          {(props.bankDetails.Status === "Rate Quoted") ?  <CardActions>
+            <Button size="small" variant="contained" id="acceptBtn" onClick={acceptCallback}>
               Accept
             </Button>
             
-          </CardActions> : null }
+          </CardActions> : <h5 id="statusBank" className={checkColor(props.bankDetails.Status)}> {props.bankDetails.Status.toUpperCase()} </h5> }
          
         </Card>
     );
