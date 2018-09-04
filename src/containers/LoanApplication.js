@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -10,11 +9,10 @@ import { Redirect } from 'react-router-dom';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from "@material-ui/core/Grid";
 import MultipleSelect from '../presentation/LeadArrangerSelect.js';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 // import MultipleSelect from '../views/leadArrangerS.js';
 import axios from 'axios';

@@ -19,7 +19,7 @@ class LeadArrangerDashboard extends Component {
         this.handleAccept = this.handleAccept.bind(this);
         this.handleRate = this.handleRate.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-        
+        this.showLoanDetails = this.showLoanDetails.bind(this);
     }
     componentDidMount() {
         const arrangerName = 'citi';
@@ -103,14 +103,20 @@ class LeadArrangerDashboard extends Component {
         console.log("Clicked");
         window.location.reload();
     }
+    showLoanDetails(loanId) {
+        this.setState({
+    		redirectToTranches: true,
+    		loanToRedirect: loanId
+    	});  
+    }
     render() {
         const biddingHeader = "Loan(s) for Bidding";
         const accepteddHeader = "Borrower Accepted Loans";
         console.log(this.state);
-   		if (this.state.redirect && this.state.loanToRedirect) {
-    		return <Redirect push to={`/dashboard`}/>;
+   		if (this.state.redirectToTranches && this.state.loanToRedirect) {
+    		return <Redirect push to={`/syndicate/${this.state.loanToRedirect}`}/>;
   		}
-        if(this.state.acceptedLoans.length > 0) {
+        if(1) {
             return (
                 <div id="leadArrangerDashboard">
                              

@@ -7,7 +7,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+
+import TableFooter from '@material-ui/core/TableFooter';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -25,9 +26,11 @@ const styles = theme => ({
 });
 function ApprovedLoans(props) {
   const {classes} = props;
+  const emptyRows = props.rowsPerPage - Math.min(props.rowsPerPage, props.totalLoans - props.page * props.rowsPerPage);
   return (
     <div className="root1">
       <h3> Approved Loans</h3>
+      
       {(props.loanList.length) ? 
       <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -49,16 +52,33 @@ function ApprovedLoans(props) {
                 <TableCell component="th" scope="row">
                   {props.loanList[row].RequisitionNo}
                 </TableCell>
-                <TableCell numeric>{props.loanList[row].firstName}</TableCell>
-                <TableCell numeric>{props.loanList[row].lastName}</TableCell>
-                <TableCell numeric>{props.loanList[row].requisitionAmount}</TableCell>
-                <TableCell numeric>{props.loanList[row].requisitionFunded}</TableCell>
+                <TableCell numeric>{props.loanList[row].FirstName}</TableCell>
+                <TableCell numeric>{props.loanList[row].LastName}</TableCell>
+                <TableCell numeric>{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell numeric>{props.loanList[row].RequisitionAmount}</TableCell>
                 <TableCell numeric>{props.loanList[row].EndDate}</TableCell>
-                <TableCell numeric>{props.loanList[row].rate}</TableCell>
+                <TableCell numeric>{props.loanList[row].Rate}</TableCell>
               </TableRow>
             );
           })}
+          {emptyRows > 0 && (
+                <TableRow style={{ height: 48 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
         </TableBody>
+        <TableFooter>
+              <TableRow>
+                <TablePagination
+                  colSpan={3}
+                  count={props.totalLoans}
+                  rowsPerPage={props.rowsPerPage}
+                  page={props.page}
+                  onChangePage={props.handleChangePage}
+                  onChangeRowsPerPage={props.handleChangeRowsPerPage}
+                />
+              </TableRow>
+            </TableFooter>
       </Table>
     </Paper> : <h4>No Approved Loans Available </h4>}
     </div>)

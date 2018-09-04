@@ -5,7 +5,7 @@ import Dashboard from './Dashboard';
 import Footer from '../presentation/Footer';
 import LoanApplication from './LoanApplication';
 import LoanDetails from './LoanDetails';
-
+import SyndicateForm from './SyndicateForm';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 class Home extends Component {
@@ -23,7 +23,7 @@ class Home extends Component {
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/application" component={LoanApplication} />
                     <Route exact path="/loan/:id" component={LoanDetails}/>
-
+                    <Route exact path="/syndicate/:id" component={SyndicateForm} />
 
                 </Switch>
             </div>

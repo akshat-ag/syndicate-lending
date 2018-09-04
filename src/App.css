@@ -172,3 +172,14 @@ body {
 #loader {
   margin-top: 100px;
 }
+#header {
+  min-height: 50px;
+}
+#syndicateForm {
+  margin-top: 40px;
+}
+#syndiWell {
+  padding: 10px 0px 10px 6px;
+  margin-right: 10px;
+  margin-left: 6px;
+}

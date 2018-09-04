@@ -24,8 +24,7 @@ export default class LoanDetails extends React.Component {
 	}
 	componentDidMount() {
 		const { match: { params } } = this.props;
-		var _a = this;
-		  axios.get(`http://delvmplwindpark00:8080/requisition/${params.id}`)
+		axios.get(`http://delvmplwindpark00:8080/requisition/${params.id}`)
 			.then(({ data: loanDetail }) => {
 			  console.log('user', loanDetail);
 				this.setState({ loanDetail: loanDetail });
