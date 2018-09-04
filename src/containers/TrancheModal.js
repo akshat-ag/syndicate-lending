@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import BasicInformationTranche from '../presentation/BasicInformationTranche.js';
-// import PaymentForm from './PaymentForm';
+import AddParticipants from '../presentation/AddParticipants.js';
 // import Review from './Review';
 
 const styles = theme => ({
@@ -104,7 +104,7 @@ class Checkout extends Component {
             setEndDate={this.handleEndDate}
         />;
       case 1:
-        return <div />;
+        return <AddParticipants />;
       case 2:
         return <div />;
       default:
