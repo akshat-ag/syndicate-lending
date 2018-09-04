@@ -10,12 +10,16 @@ class Dashboard extends Component {
     constructor(props) {
     	super(props);
     	this.state = {
-    		
+            approvedLoansRowsPerPage: 5,
+            approvedLoansPage: 0,
+            approvedLoansView: []
     	};
-    	this.myCallback = this.myCallback.bind(this);
+        this.myCallback = this.myCallback.bind(this);
+        this.handleChangePage = this.handleChangePage.bind(this);
+        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     }
     componentDidMount() {
-        axios.get(`http://delvmplwindpark00:8080/requisitions/abc`)
+        axios.get(`requisitions/abc`)
             .then(({ data: loanList }) => {
              // console.log('user', loanList);
             let approvedLoans = [];
@@ -28,6 +32,7 @@ class Dashboard extends Component {
                 }
             } 
             this.setState({ approvedLoans: approvedLoans, pendingLoans: pendingLoans });
+            this.setApprovedViewLoans();
                          });
     }
     myCallback = (loanId) => {
@@ -36,6 +41,23 @@ class Dashboard extends Component {
     		loanToRedirect: loanId
     	});
     }
+    setApprovedViewLoans = () => {
+        var arr = this.state.approvedLoans.slice
+        (this.state.approvedLoansPage * this.state.approvedLoansRowsPerPage,
+            this.state.approvedLoansPage * this.state.approvedLoansRowsPerPage +
+            this.state.approvedLoansRowsPerPage);
+        //this.setState({approvedLoansView: arr});
+        return arr;
+    }
+    handleChangePage = (event, page) => {
+        this.setState({ approvedLoansPage: page });
+        //this.setApprovedViewLoans(page);
+    };
+    handleChangeRowsPerPage = event => {
+        var rows = event.target.value;
+        this.setState({ approvedLoansRowsPerPage: rows, approvedLoansPage: 0 });
+        //this.setApprovedViewLoans(rows);
+    };
     render() {
         console.log(this.state);
    		if (this.state.redirect && this.state.loanToRedirect) {
@@ -43,16 +65,20 @@ class Dashboard extends Component {
   		}
         if(this.state.approvedLoans && this.state.pendingLoans) {
             return (
-                <div id="borrowerDa0shboard">
+                <div id="borrowerDashboard">
                     <Grid container>
                         <Grid item xs={12} sm={10} md={10}>
     			<h3> Applications Pending for Lead Arranger Selection </h3>  
-                        
-                  <PendingApplications loanList={this.state.pendingLoans}
+                <PendingApplications loanList={this.state.pendingLoans}
                   redirectToLoan={this.myCallback} />
                  </Grid>
                  <Grid xs={12} sm={10} md={10}>
-                <ApprovedLoans loanList={this.state.approvedLoans} />
+                <ApprovedLoans loanList={this.setApprovedViewLoans()}
+                totalLoans={this.state.approvedLoans.length}
+                rowsPerPage={this.state.approvedLoansRowsPerPage}
+                page={this.state.approvedLoansPage}
+                handleChangePage={this.handleChangePage}
+                handleChangeRowsPerPage={this.handleChangeRowsPerPage}/>
                 </Grid>
                 </Grid>
                 </div>

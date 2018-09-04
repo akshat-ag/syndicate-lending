@@ -56,7 +56,7 @@ function BorrowerAcceptedLoans(props) {
                 <TableCell numeric>{props.loanList[row].EndDate}</TableCell>
 
                 <TableCell numeric>{props.loanList[row].Rate}</TableCell>
-                <TableCell numeric><Button>Loan Details</Button></TableCell>
+                <TableCell numeric><Button onClick={() => {props.showLoan(props.loanList[row].RequisitionNo);}}>Loan Details</Button></TableCell>
                 <TableCell numeric><Button>Generate Information Memo</Button></TableCell>
               </TableRow>
             );

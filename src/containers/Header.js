@@ -11,7 +11,7 @@ export default class Header extends React.Component {
 		return (
 			 <div >
         		<AppBar position="static">
-            		<Toolbar>
+            		<Toolbar id="header">
                 		<Typography variant="title" color="inherit">
                			Syndicate Loans Platform
                			</Typography>
