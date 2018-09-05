@@ -41,19 +41,9 @@ const MenuProps = {
 };
 
 const names = [
-  // 'Oliver Hansen',
-  // 'Van Henry',
-  // 'April Tucker',
-  // 'Ralph Hubbard',
-  // 'Omar Alexander',
-  // 'Carlos Abbott',
-  // 'Miriam Wagner',
-  // 'Bradley Wilkerson',
-  // 'Virginia Andrews',
-  // 'Kelly Snyder',
-  'citi',
-  'jp',
-  'wells'
+  'CitiBank',
+  'Wells Fargo',
+  'JP Morgan'
 ];
 
 class MultipleSelect extends React.Component {

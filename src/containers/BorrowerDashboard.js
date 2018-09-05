@@ -19,7 +19,7 @@ class Dashboard extends Component {
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     }
     componentDidMount() {
-        axios.get(`requisitions/abc`)
+        axios.get(`http://delvmplwindpark00:8080/requisitions/abc`)
             .then(({ data: loanList }) => {
              // console.log('user', loanList);
             let approvedLoans = [];
