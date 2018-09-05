@@ -53,7 +53,25 @@ const styles = theme => ({
 });
 
 const steps = ['Basic Information', 'Add Participating Banks', 'Create Drawdowns'];
-
+const banks = [
+                {
+                  "BankId": 1,
+              "BankName": "CitiBank",
+              "ContactFirstName": "Patrick",
+              "ContactLastName": "Sprows",
+                },
+                {
+                  "BankId": 2,
+                  "BankName": "Wells Fargo",
+                  "ContactFirstName": "Adam",
+                  "ContactLastName": "McLory"
+                }, {
+                  "BankId": 3,
+                  "BankName": "JP Morgan",
+                  "ContactFirstName": "Billy",
+                  "ContactLastName": "Brown"
+                }
+              ];
 
 
 class Checkout extends Component {
@@ -63,10 +81,18 @@ class Checkout extends Component {
             activeStep: 0,
             trancheStartDate: this.props.trancheStartDate,
             trancheEndtDate: this.props.trancheEndtDate,
-            trancheAmount: this.props.trancheAmount
+            trancheAmount: this.props.trancheAmount,
+            currentBankObj: {
+              bankId: '',
+              ratio: ''
+            },
+            participants: [],
+            ratioExceeded: false
         };
         console.log(this.props)
         this.handleEndDate = this.handleEndDate.bind(this);
+        this.checkDisability = this.checkDisability.bind(this);
+        this.addParticipant = this.addParticipant.bind(this);
     }
     
  componentDidMount() {
@@ -94,6 +120,69 @@ class Checkout extends Component {
   handleEndDate = function(e) { 
     this.setState({trancheEndDate: e.target.value});
   }
+  checkDisability = () => {
+    if(this.state.currentBankObj.bank && this.state.currentBankObj.ratio) {
+      return true;
+    }
+    return false;
+  }
+  checkBankRatio = (e) => {
+    let currRatio = Number(e);
+    for(let i=0; i<this.state.participants.length; i++) {
+      currRatio = Number(this.state.participants[i].ratio) + currRatio;
+    }
+    if(currRatio <= 100) {
+      this.setState({ ratioExceeded: false});
+      return true;
+    }
+    this.setState({ ratioExceeded: true});
+    return false;
+  }
+  setCurrentBankObj =(e,prop) => {
+    let currObj;
+    let value = e.target.value;
+
+    if(prop === "bank") {
+      currObj = banks.find(obj => {
+        return obj.BankId === value
+      });
+      this.setState(prevState => ({
+        currentBankObj: {
+            ...prevState.currentBankObj,
+            bank: currObj.BankName,
+            bankId: value,
+            ContactFirstName: currObj.ContactFirstName,
+            ContactLastName: currObj.ContactLastName
+        }
+      }));
+    } else if(prop === "ratio") {
+      if(this.checkBankRatio(value)) {
+        let amount = (this.state.trancheAmount*value)/100;
+        this.setState(prevState => ({
+          currentBankObj: {
+              ...prevState.currentBankObj,
+              ratio: value,
+              amount: amount
+          }
+        }));
+      }
+    }
+  }
+  addParticipant = () => {
+    if(this.state.currentBankObj.bankId) {
+      this.setState(prevState => ({
+        participants: [
+            ...prevState.participants,
+            this.state.currentBankObj
+        ]
+      }));
+      let newObj = {
+        bankId: '',
+        ratio: ''
+      };
+      this.setState({ currentBankObj: newObj});
+    }
+  }
   getStepContent(step) {
     switch (step) {
       case 0:
@@ -104,7 +193,13 @@ class Checkout extends Component {
             setEndDate={this.handleEndDate}
         />;
       case 1:
-        return <AddParticipants />;
+        return <AddParticipants checkDisability={this.checkDisability}
+                                currentBankObj={this.state.currentBankObj}
+                                setCurrentBankObj={this.setCurrentBankObj}
+                                checkBankRatio={this.checkBankRatio}
+                                ratioError = {this.state.ratioExceeded}
+                                addParticipant = {this.addParticipant}
+                                participants ={this.state.participants}/>;
       case 2:
         return <div />;
       default:

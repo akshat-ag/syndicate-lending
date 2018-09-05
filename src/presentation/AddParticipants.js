@@ -13,15 +13,19 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
+import Chip from "@material-ui/core/Chip";
+import InputLabel from '@material-ui/core/InputLabel';
 const styles = theme => ({
     root: {
-        width: '90%',
+        width: '100%',
         marginTop: theme.spacing.unit * 3,
         overflowX: 'auto',
     }, table: {
@@ -29,22 +33,66 @@ const styles = theme => ({
     },
     paddingNone: {
         padding: '1px 56px 1px 24px',
+    },
+    chip: {
+        marginTop: theme.spacing.unit * 3,
+        marginLeft: theme.spacing.unit * 16
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+      },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2,
+    },
+    delbutton: {
+        height: theme.spacing.unit * 5,
+        width: theme.spacing.unit * 5,
     }
 });
+{/* <Button variant="fab" color="primary" aria-label="Delete" >
+                                <DeleteIcon />
+                            </Button>
+*/}
 function getParticipantRows(data) {
-    return data.map(row => {
-        return <TableRow>
-                  <TableCell>counter</TableCell>
-                  <TableCell>{el.b}</TableCell>
-                  <TableCell>{el.c}</TableCell>
-              </TableRow>
-        }) 
+    return Object.keys(data).map(row => {
+        return (
+          <TableRow key={data[row].bankId}>
+            <TableCell component="th" scope="row">
+              {Number(row) + 1}
+            </TableCell>
+            <TableCell >{data[row].bank}</TableCell>
+            <TableCell >{data[row].ratio}</TableCell>
+            <TableCell >{data[row].amount}</TableCell>
+            <TableCell ></TableCell>
+
+          </TableRow>
+        );
+      })
 }
 function AddParticipants(props) {
     const { classes } = props;
+    let arr = [];
+    
     return (
         <div className="">
+            <Grid container>
+                <Grid item xs={6}>
             <h3> Add Bank</h3>
+            </Grid>
+            <Grid item xs={6}>
+               
+            <Chip
+            className={classes.chip}
+            label="Add Another"
+            clickable={props.checkDisability()}
+            onDelete={props.addParticipant}
+            color="primary"
+            deleteIcon={<AddIcon />}
+        />
+     
+        </Grid>
+        <Grid item xs={12}>
             <Paper className={classes.root}>
                 <Table className={classes.table}>
                     <TableHead>
@@ -57,35 +105,49 @@ function AddParticipants(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        
+                    {getParticipantRows(props.participants)}
                         <TableRow>
                             <TableCell component="th" scope="row">
-                                1
+                                {props.participants.length + 1}
                             </TableCell>
                             <TableCell numeric>
-                                <FormControl className={classes.formControl}>
-                                    <Select
-                                    name="age"
+                            <FormControl >
+                            <Select
+                                    value={props.currentBankObj.bankId}
+                                    onChange={(e) => props.setCurrentBankObj(e,"bank")}
+                                    name="bank"
                                     displayEmpty
-                                    className={classes.selectEmpty}>
-                                        <MenuItem value="" disabled>
-                                            Placeholder
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                    <FormHelperText>Placeholder</FormHelperText>
+                                   
+                                >
+                                    <MenuItem value="" disabled>
+                                    Select Bank
+                                    </MenuItem>
+                                    <MenuItem value={1}>CitiBank</MenuItem>
+                                    <MenuItem value={2}>Wells Fargo</MenuItem>
+                                    <MenuItem value={3}>JP Morgan</MenuItem>
+                                </Select>
                                 </FormControl>
+                                
                             </TableCell>
                             <TableCell component="th" scope="row">
-                               20%
+                            <TextField
+                                required
+                                id="simple-start-adornment"
+                                type="number"
+                                value={props.currentBankObj.ratio}
+                                onChange={(e) => props.setCurrentBankObj(e,"ratio")}
+                                error={props.ratioError}
+                               
+                                InputProps={{
+                                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                }}
+                            />
                             </TableCell>
                             <TableCell component="th" scope="row">
-                               1 million USD
+                            {props.currentBankObj.amount}
                             </TableCell>
                             <TableCell component="th" scope="row">
-                            <Button variant="fab" color="primary" aria-label="Delete" className={classes.button}>
+                            <Button variant="fab" color="primary" aria-label="Delete" className={classes.delbutton}>
                                 <DeleteIcon />
                             </Button>
                             </TableCell>
@@ -93,6 +155,8 @@ function AddParticipants(props) {
                     </TableBody>
                 </Table>
             </Paper>
+            </Grid>
+            </Grid>
         </div>)
 }
 
