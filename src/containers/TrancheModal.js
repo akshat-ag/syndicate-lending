@@ -13,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import BasicInformationTranche from '../presentation/BasicInformationTranche.js';
 import AddParticipants from '../presentation/AddParticipants.js';
-// import Review from './Review';
-
+import CreateDrawdowns from '../presentation/CreateDrawdowns.js';
+import moment from 'moment';
 const styles = theme => ({
   appBar: {
     position: 'relative',
@@ -86,8 +86,13 @@ class Checkout extends Component {
               bankId: '',
               ratio: ''
             },
+            currentDrawdownObj: {
+              amount: ''
+            },
             participants: [],
-            ratioExceeded: false
+            drawdowns: [],
+            ratioExceeded: false,
+            totalRatio: 0
         };
         console.log(this.props)
         this.handleEndDate = this.handleEndDate.bind(this);
@@ -100,6 +105,9 @@ class Checkout extends Component {
  }
   handleNext = () => {
     const { activeStep } = this.state;
+    if(activeStep === steps.length - 2) {
+      this.addParticipant();
+    }
     this.setState({
       activeStep: activeStep + 1,
     });
@@ -117,22 +125,33 @@ class Checkout extends Component {
       activeStep: 0,
     });
   };
-  handleEndDate = function(e) { 
-    this.setState({trancheEndDate: e.target.value});
+  handleEndDate = function(e) {
+    var momentObj = moment(e.target.value, 'YYYY-MM-DD').add(5, 'days');
+    var momentString = momentObj.format('YYYY-MM-DD'); 
+    this.setState({trancheEndDate: momentString});
+    
   }
   checkDisability = () => {
-    if(this.state.currentBankObj.bank && this.state.currentBankObj.ratio) {
+    if(this.state.currentBankObj.bank && this.state.currentBankObj.ratio
+      && !this.state.ratioExceeded) {
       return true;
     }
     return false;
   }
+  checkDrawdownDisability = () => {
+
+  }
   checkBankRatio = (e) => {
-    let currRatio = Number(e);
+    let currRatio = Number(e) || 0;
     for(let i=0; i<this.state.participants.length; i++) {
       currRatio = Number(this.state.participants[i].ratio) + currRatio;
     }
     if(currRatio <= 100) {
+      if(currRatio === 100) {
+        this.setState({ratioExceeded: true});
+      } else {
       this.setState({ ratioExceeded: false});
+      }
       return true;
     }
     this.setState({ ratioExceeded: true});
@@ -168,8 +187,30 @@ class Checkout extends Component {
       }
     }
   }
+  setCurrentDrawdownObj = (e,prop) => {
+    let value = e.target.value;
+    if(prop === "endDate") {
+      this.setState(prevState => ({
+        currentDrawdownObj: {
+            ...prevState.currentDrawdownObj,
+            endDate: value
+        }
+      }));
+    } else if(prop === "amount") {
+      if(this.checkDrawdownAmount(value)) {
+        
+        this.setState(prevState => ({
+          currentDrawdownObj: {
+              ...prevState.currentDrawdownObj,
+              amount: value
+          }
+        }));
+      }
+    }
+  }
+  checkDrawdownAmount = (e) => {}
   addParticipant = () => {
-    if(this.state.currentBankObj.bankId) {
+    if(this.state.currentBankObj.bankId && this.state.currentBankObj.ratio) {
       this.setState(prevState => ({
         participants: [
             ...prevState.participants,
@@ -180,8 +221,21 @@ class Checkout extends Component {
         bankId: '',
         ratio: ''
       };
+      let ratio = this.state.totalRatio + Number(this.state.currentBankObj.ratio);
+
+      this.setState({totalRatio: ratio});
       this.setState({ currentBankObj: newObj});
     }
+  }
+  disableNext = () => {
+    const {activeStep} = this.state;
+    if(activeStep === steps.length - 2) {
+      if(this.state.ratioExceeded) {
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
   getStepContent(step) {
     switch (step) {
@@ -197,11 +251,19 @@ class Checkout extends Component {
                                 currentBankObj={this.state.currentBankObj}
                                 setCurrentBankObj={this.setCurrentBankObj}
                                 checkBankRatio={this.checkBankRatio}
-                                ratioError = {this.state.ratioExceeded}
+                                ratioExceeded = {this.state.ratioExceeded}
                                 addParticipant = {this.addParticipant}
-                                participants ={this.state.participants}/>;
+                                participants ={this.state.participants}
+                                totalRatio={this.state.totalRatio}/>;
       case 2:
-        return <div />;
+        return <CreateDrawdowns checkDisability={this.checkDrawdownDisability}
+                                currentDrawdownObj={this.state.currentDrawdownObj}
+                                setCurrentDrawdownObj={this.setCurrentDrawdownObj}
+                                checkDrawdownAmount={this.checkDrawdownAmount}
+                                amountExceeded = {this.state.amountExceeded}
+                                addDrawdown = {this.addDrawdown}
+                                drawdowns ={this.state.drawdowns}
+                                totalAmount={this.state.totalAmount}/>;
       default:
         throw new Error('Unknown step');
     }
@@ -250,6 +312,7 @@ class Checkout extends Component {
                       variant="contained"
                       color="primary"
                       onClick={this.handleNext}
+                      disabled={this.disableNext()}
                       className={classes.button}
                     >
                       {activeStep === steps.length - 1 ? 'Submit' : 'Next'}

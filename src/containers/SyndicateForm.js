@@ -17,6 +17,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
+import moment from 'moment';
 const styles = theme => ({
     layout: {
         width: 'auto',
@@ -90,9 +91,10 @@ class SyndicateForm extends React.Component {
             date = this.state.loanDetail.StartDate;
             //this.setState({ trancheStartDate: date})
         }else {
-            let datee = this.state.tranches[this.state.tranches.length -1].endDate;
-            date = datee.setDate(date.getDate() + 1);
-            //this.setState({ trancheStartDate: date })
+            let date = this.state.tranches[this.state.tranches.length -1].endDate;
+            let momentObj = moment(date, 'YYYY-MM-DD').add(1, 'days');
+            date = momentObj.format('YYYY-MM-DD');
+            this.setState({ trancheStartDate: date })
         }
         return date;
     }

@@ -32,7 +32,7 @@ const styles = theme => ({
         minWidth: 100,
     },
     paddingNone: {
-        padding: '1px 56px 1px 24px',
+        padding: '1px 22px 1px 12px',
     },
     chip: {
         marginTop: theme.spacing.unit * 3,
@@ -54,30 +54,33 @@ const styles = theme => ({
         marginBottom: theme.spacing.unit * 0
     },
     inputRatio: {
-        width: theme.spacing.unit * 15
+        width: theme.spacing.unit * 18
+    },
+    amount: {
+        width: theme.spacing.unit * 12
     }
 });
 {/* <Button variant="fab" color="primary" aria-label="Delete" >
                                 <DeleteIcon />
                             </Button>
 */}
-function getParticipantRows(data) {
+function getDrawdownRows(data) {
     return Object.keys(data).map(row => {
         return (
           <TableRow key={data[row].bankId}>
             <TableCell component="th" scope="row">
               {Number(row) + 1}
             </TableCell>
-            <TableCell >{data[row].bank}</TableCell>
-            <TableCell >{data[row].ratio}</TableCell>
             <TableCell >{data[row].amount}</TableCell>
+            <TableCell >{data[row].startDate}</TableCell>
+            <TableCell >{data[row].endDate}</TableCell>
             <TableCell ></TableCell>
 
           </TableRow>
         );
       })
 }
-function AddParticipants(props) {
+function CreateDrawdowns(props) {
     const { classes } = props;
     let arr = [];
     let ratio = 100 - (props.totalRatio);
@@ -85,7 +88,7 @@ function AddParticipants(props) {
         <div className="">
             <Grid container>
                 <Grid item xs={6}>
-            <h3 className={classes.header}> Add Bank</h3>
+            <h3 className={classes.header}> Create Drawdowns</h3>
             </Grid>
             <Grid item xs={6}>
               { console.log('click',props.checkDisability())}
@@ -94,77 +97,74 @@ function AddParticipants(props) {
             className={classes.chip}
             label="Add Another"
             clickable={props.checkDisability()}
-            onDelete={props.addParticipant}
+            onDelete={props.addDrawdown}
             color="primary"
             deleteIcon={<AddIcon />}
         />
      
         </Grid>
         <Grid item xs={12} sm={6}>
-           {props.ratioExceeded ? "Asset Ratio Limit Reached" : "Asset Ratio Remaining: " + ratio}
+           {props.ratioExceeded ? "Tranche Amount Splitted" : "Amount Remaining: " + ratio}
             </Grid>
         <Grid item xs={12}>
             <Paper className={classes.root}>
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>S.no</TableCell>
-                            <TableCell >Bank</TableCell>
-                            <TableCell >Asset Ratio</TableCell>
-                            <TableCell >Amount</TableCell>
-                            <TableCell >Action</TableCell>
+                            <TableCell  classes={{paddingNone: classes.paddingNone}}>S.no</TableCell>
+                            <TableCell  classes={{paddingNone: classes.paddingNone}}>Amount</TableCell>
+                            <TableCell  classes={{paddingNone: classes.paddingNone}}>Start Date</TableCell>
+                            <TableCell classes={{paddingNone: classes.paddingNone}}>End Date</TableCell>
+                            <TableCell  classes={{paddingNone: classes.paddingNone}}>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                    {getParticipantRows(props.participants)}
-                    {!(props.totalRatio === 100) ? 
+                    {getDrawdownRows(arr)}
+                    
                         <TableRow>
                             <TableCell component="th" scope="row">
-                                {props.participants.length + 1}
+                                {props.drawdowns.length + 1}
                             </TableCell>
                             <TableCell >
-                            <FormControl >
-                            <Select
-                                    value={props.currentBankObj.bankId}
-                                    onChange={(e) => props.setCurrentBankObj(e,"bank")}
-                                    name="bank"
-                                    displayEmpty
-                                   
-                                >
-                                    <MenuItem value="" disabled>
-                                    Select Bank
-                                    </MenuItem>
-                                    <MenuItem value={1}>CitiBank</MenuItem>
-                                    <MenuItem value={2}>Wells Fargo</MenuItem>
-                                    <MenuItem value={3}>JP Morgan</MenuItem>
-                                </Select>
-                                </FormControl>
-                                
-                            </TableCell>
-                            <TableCell component="th" scope="row">
                             <TextField
                                 required
                                 id="simple-start-adornment"
                                 type="number"
-                                className={classes.inputRatio}
-                                value={props.currentBankObj.ratio}
-                                onChange={(e) => props.setCurrentBankObj(e,"ratio")}
-                                error={props.ratioExceeded}
+                                className={classes.amount}
+                                value={props.currentDrawdownObj.amount}
+                                onChange={(e) => props.setCurrentDrawdownObj(e,"amount")}
+                                error={props.amountExceeded}
                                
                                 InputProps={{
-                                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                 }}
                             />
                             </TableCell>
                             <TableCell component="th" scope="row">
-                            {props.currentBankObj.amount}
+                            <TextField
+                                required
+                                type="date"
+                                id="start-date"
+                                className={classes.inputRatio}
+                                value={props.currentDrawdownObj.startDate}
+                            />
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                            <TextField
+                                required
+                                type="date"
+                                id="start-date"
+                                className={classes.inputRatio}
+                                value={props.currentDrawdownObj.endDate}
+                                onChange={(e) => props.setCurrentDrawdownObj(e, "endDate")}
+                            />
                             </TableCell>
                             <TableCell component="th" scope="row">
                             <Button variant="fab" color="primary" aria-label="Delete" className={classes.delbutton}>
                                 <DeleteIcon />
                             </Button>
                             </TableCell>
-                        </TableRow> : null }
+                        </TableRow> 
                     </TableBody>
                 </Table>
             </Paper>
@@ -173,4 +173,4 @@ function AddParticipants(props) {
         </div>)
 }
 
-export default withStyles(styles)(AddParticipants);
+export default withStyles(styles)(CreateDrawdowns);
