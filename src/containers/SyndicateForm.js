@@ -85,7 +85,7 @@ class SyndicateForm extends React.Component {
         let eachTrancheAmount = this.state.loanDetail.RequisitionAmount / trancheNo;
         this.setState({ eachTrancheAmount});
       };
-      setStartTrancheDate = () => {
+    setStartTrancheDate = () => {
         let date;
         if(this.state.tranches.length === 0) {
             date = this.state.loanDetail.StartDate;

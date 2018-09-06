@@ -87,7 +87,8 @@ class Checkout extends Component {
               ratio: ''
             },
             currentDrawdownObj: {
-              amount: ''
+              amount: '',
+              startDate: this.props.trancheStartDate
             },
             participants: [],
             drawdowns: [],
@@ -197,7 +198,7 @@ class Checkout extends Component {
         }
       }));
     } else if(prop === "amount") {
-      if(this.checkDrawdownAmount(value)) {
+      if(1) {
         
         this.setState(prevState => ({
           currentDrawdownObj: {
