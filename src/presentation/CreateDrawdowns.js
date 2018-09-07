@@ -22,7 +22,8 @@ import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import Chip from "@material-ui/core/Chip";
-import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -67,7 +68,7 @@ const styles = theme => ({
 function getDrawdownRows(data) {
     return Object.keys(data).map(row => {
         return (
-          <TableRow key={data[row].bankId}>
+          <TableRow key={data[row].startDate}>
             <TableCell component="th" scope="row">
               {Number(row) + 1}
             </TableCell>
@@ -97,11 +98,11 @@ function CreateDrawdowns(props) {
             className={classes.chip}
             label="Add Another"
             clickable={props.checkDisability()}
-            onDelete={props.addDrawdown}
+            onDelete={() => props.addDrawdown(props.startDate)}
             color="primary"
             deleteIcon={<AddIcon />}
         />
-     
+        
         </Grid>
         <Grid item xs={12} sm={6}>
            {props.ratioExceeded ? "Tranche Amount Splitted" : "Amount Remaining: " + ratio}
@@ -119,7 +120,7 @@ function CreateDrawdowns(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                    {getDrawdownRows(arr)}
+                    {getDrawdownRows(props.drawdowns)}
                     
                         <TableRow>
                             <TableCell component="th" scope="row">
@@ -134,9 +135,9 @@ function CreateDrawdowns(props) {
                                 value={props.currentDrawdownObj.amount}
                                 onChange={(e) => props.setCurrentDrawdownObj(e,"amount")}
                                 error={props.amountExceeded}
-                               
+                                
                                 InputProps={{
-                                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                startAdornment: <InputAdornment position="start">$</InputAdornment>
                                 }}
                             />
                             </TableCell>
@@ -145,19 +146,26 @@ function CreateDrawdowns(props) {
                                 required
                                 type="date"
                                 id="start-date"
+                                disabled
                                 className={classes.inputRatio}
-                                value={props.currentDrawdownObj.startDate}
+                                value={props.startDate}
                             />
                             </TableCell>
                             <TableCell component="th" scope="row">
-                            <TextField
-                                required
-                                type="date"
-                                id="start-date"
-                                className={classes.inputRatio}
-                                value={props.currentDrawdownObj.endDate}
-                                onChange={(e) => props.setCurrentDrawdownObj(e, "endDate")}
+                            <FormControl  >
+                            <Input
+                            required
+                            type="date"
+                            id="end-date"
+                            inputProps= {{ min: props.drawdownEndMin, max: props.trancheEndDate, }}
+                           
+                            
+                            className={classes.inputRatio}
+                            value={props.currentDrawdownObj.endDate}
+                            onChange={(e) => props.setCurrentDrawdownObj(e, "endDate")}
                             />
+                        </FormControl>
+                            
                             </TableCell>
                             <TableCell component="th" scope="row">
                             <Button variant="fab" color="primary" aria-label="Delete" className={classes.delbutton}>

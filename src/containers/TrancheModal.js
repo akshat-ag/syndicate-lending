@@ -80,7 +80,7 @@ class Checkout extends Component {
         this.state = {
             activeStep: 0,
             trancheStartDate: this.props.trancheStartDate,
-            trancheEndtDate: this.props.trancheEndtDate,
+            trancheEndDate: this.props.trancheEndDate,
             trancheAmount: this.props.trancheAmount,
             currentBankObj: {
               bankId: '',
@@ -88,26 +88,33 @@ class Checkout extends Component {
             },
             currentDrawdownObj: {
               amount: '',
-              startDate: this.props.trancheStartDate
+              startDate: ''
             },
             participants: [],
             drawdowns: [],
             ratioExceeded: false,
-            totalRatio: 0
+            totalRatio: 0,
+            amountExceeded: false
         };
         console.log(this.props)
         this.handleEndDate = this.handleEndDate.bind(this);
         this.checkDisability = this.checkDisability.bind(this);
         this.addParticipant = this.addParticipant.bind(this);
+        this.checkDrawdownDisability = this.checkDrawdownDisability.bind(this);
+        this.addDrawdown = this.addDrawdown.bind(this);
     }
     
  componentDidMount() {
-     //this.setTrancheDate();
+     this.abv();
+ }
+ abv =() => {
+   console.log('adsdasdadas');
  }
   handleNext = () => {
     const { activeStep } = this.state;
     if(activeStep === steps.length - 2) {
       this.addParticipant();
+     // this.setDrawdownStartDate();
     }
     this.setState({
       activeStep: activeStep + 1,
@@ -127,9 +134,7 @@ class Checkout extends Component {
     });
   };
   handleEndDate = function(e) {
-    var momentObj = moment(e.target.value, 'YYYY-MM-DD').add(5, 'days');
-    var momentString = momentObj.format('YYYY-MM-DD'); 
-    this.setState({trancheEndDate: momentString});
+    this.setState({trancheEndDate: e.target.value});
     
   }
   checkDisability = () => {
@@ -140,7 +145,11 @@ class Checkout extends Component {
     return false;
   }
   checkDrawdownDisability = () => {
-
+    if(this.state.currentDrawdownObj.amount && this.state.currentDrawdownObj.endDate
+      && !this.state.amountExceeded) {
+      return true;
+    }
+    return false;
   }
   checkBankRatio = (e) => {
     let currRatio = Number(e) || 0;
@@ -191,6 +200,8 @@ class Checkout extends Component {
   setCurrentDrawdownObj = (e,prop) => {
     let value = e.target.value;
     if(prop === "endDate") {
+      
+      
       this.setState(prevState => ({
         currentDrawdownObj: {
             ...prevState.currentDrawdownObj,
@@ -198,7 +209,7 @@ class Checkout extends Component {
         }
       }));
     } else if(prop === "amount") {
-      if(1) {
+      if(this.checkDrawdownAmount(value)) {
         
         this.setState(prevState => ({
           currentDrawdownObj: {
@@ -207,9 +218,43 @@ class Checkout extends Component {
           }
         }));
       }
+    } 
+  }
+  checkDrawdownAmount = (e) => {
+    let totalAmount = Number(e) || 0;
+    for(let i=0; i<this.state.drawdowns.length; i++) {
+      totalAmount = Number(this.state.drawdowns[i].amount) + totalAmount;
+    }
+    if(totalAmount <= this.state.trancheAmount) {
+      if(totalAmount === this.state.trancheAmount) {
+        this.setState({amountExceeded: true});
+      } else {
+      this.setState({ amountExceeded: false});
+      }
+      return true;
+    }
+    this.setState({ amountExceeded: true});
+    return false;
+  }
+  setDrawdownStartDate = () => {
+    if(this.state.drawdowns.length === 0) {
+      
+      return this.state.trancheStartDate;
+    } else {
+      let lastDrawdownEndDate = moment(this.state.drawdowns[this.state.drawdowns.length -1].endDate,
+                                        'YYYY-MM-DD').add(1, 'days');
+      let newStartDate =   lastDrawdownEndDate.format('YYYY-MM-DD');
+      
+      return newStartDate;
     }
   }
-  checkDrawdownAmount = (e) => {}
+  setEndDateLimit = (startDate) => {
+    let lastDrawdownEndDate = moment(startDate,
+                                        'YYYY-MM-DD').add(1, 'days');
+    let newStartDate =   lastDrawdownEndDate.format('YYYY-MM-DD');
+    return newStartDate;
+    
+  }
   addParticipant = () => {
     if(this.state.currentBankObj.bankId && this.state.currentBankObj.ratio) {
       this.setState(prevState => ({
@@ -228,6 +273,27 @@ class Checkout extends Component {
       this.setState({ currentBankObj: newObj});
     }
   }
+  addDrawdown = (startDate) => {
+    if(this.state.currentDrawdownObj.amount && this.state.currentDrawdownObj.endDate) {
+      let finalObj = this.state.currentDrawdownObj;
+      finalObj.startDate = startDate;
+      this.setState(prevState => ({
+        drawdowns: [
+            ...prevState.drawdowns,
+            finalObj
+        ]
+      }));
+      let newObj = {
+        amount: '',
+        startDate: '',
+        endDate: ''
+      };
+      let totalAmount = this.state.totalAmount + Number(this.state.currentDrawdownObj.amount);
+
+      this.setState({totalAmount: totalAmount});
+      this.setState({ currentDrawdownObj: newObj});
+    }
+  }
   disableNext = () => {
     const {activeStep} = this.state;
     if(activeStep === steps.length - 2) {
@@ -238,7 +304,7 @@ class Checkout extends Component {
     }
     return false;
   }
-  getStepContent(step) {
+  getStepContent(step,startDate,endDateLimit) {
     switch (step) {
       case 0:
         return <BasicInformationTranche 
@@ -260,6 +326,9 @@ class Checkout extends Component {
         return <CreateDrawdowns checkDisability={this.checkDrawdownDisability}
                                 currentDrawdownObj={this.state.currentDrawdownObj}
                                 setCurrentDrawdownObj={this.setCurrentDrawdownObj}
+                                trancheEndDate={this.state.trancheEndDate}
+                                drawdownEndMin = {endDateLimit}
+                                startDate = {startDate}
                                 checkDrawdownAmount={this.checkDrawdownAmount}
                                 amountExceeded = {this.state.amountExceeded}
                                 addDrawdown = {this.addDrawdown}
@@ -272,7 +341,8 @@ class Checkout extends Component {
   render() {
     const { classes } = this.props;
     const { activeStep } = this.state;
-
+    let startDate = this.setDrawdownStartDate();
+    let endDateLimit = this.setEndDateLimit(startDate);
     return (
       <React.Fragment>
        
@@ -302,7 +372,7 @@ class Checkout extends Component {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  {this.getStepContent(activeStep)}
+                  {this.getStepContent(activeStep,startDate,endDateLimit)}
                   <div className={classes.buttons}>
                     {activeStep !== 0 && (
                       <Button onClick={this.handleBack} className={classes.button}>
