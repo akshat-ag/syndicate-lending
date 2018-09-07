@@ -20,6 +20,7 @@ function BasicInformationTranche(props) {
               id="amount"
               required
               value={props.amount}
+             
               startAdornment={<InputAdornment position="start">$</InputAdornment>}
             />
           </FormControl>
