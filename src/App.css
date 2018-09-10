@@ -176,7 +176,7 @@ body {
   min-height: 50px;
 }
 #syndicateForm {
-  margin-top: 40px;
+  /* margin-top: 40px; */
 }
 #syndiWell {
   padding: 10px 0px 10px 6px;
@@ -185,4 +185,24 @@ body {
 }
 #addParticipant {
   float: right
+}
+#headerr {
+  background-color: #045e8c; 
+}
+#submtbtn {
+  background-color: #09b968;
+}
+#disabledsubBtn {
+  background-color: #B1BEB8;
+}
+#addtranch {
+  background-color: #828f94;
+}
+.wellText {
+  font-family: -WEBKIT-PICTOGRAPH;
+  font-style: italic;
+  font-size: 18px;
+}
+#logout {
+  float:right
 }
