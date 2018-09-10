@@ -17,6 +17,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
 import moment from 'moment';
 const styles = theme => ({
     layout: {
@@ -45,6 +46,10 @@ const styles = theme => ({
     trancheNo: {
         marginTop: theme.spacing.unit * 3,
         marginLeft: theme.spacing.unit * 1.5,
+    },
+    submitBtn: {
+        marginTop: theme.spacing.unit * 3,
+        marginLeft: theme.spacing.unit * 1.5, 
     }
 })
 class SyndicateForm extends React.Component {
@@ -55,9 +60,11 @@ class SyndicateForm extends React.Component {
             tranches: [],
             trancheNo: '',
             trancheStartDate: '',
-            trancheEndDate: ''
+            trancheEndDate: '',
+            counter: 0
         };
         this.handleOpen = this.handleOpen.bind(this);
+        this.checkDisability = this.checkDisability.bind(this);
     }
     componentDidMount() {
         const { match: { params } } = this.props;
@@ -91,18 +98,50 @@ class SyndicateForm extends React.Component {
             date = this.state.loanDetail.StartDate;
             //this.setState({ trancheStartDate: date})
         }else {
-            let date = this.state.tranches[this.state.tranches.length -1].endDate;
+            date = this.state.tranches[this.state.tranches.length -1].EndDate;
             let momentObj = moment(date, 'YYYY-MM-DD').add(1, 'days');
             date = momentObj.format('YYYY-MM-DD');
-            this.setState({ trancheStartDate: date })
+            //this.setState({ trancheStartDate: date })
         }
         return date;
     }
     setEndTrancheDate = () => {
-        if(this.state.tranches.length === this.state.trancheNo) {
-            this.setState({trancheEndDate: this.props.endDateLoan})
+        if(this.state.trancheNo && this.state.tranches.length === Number(this.state.trancheNo) -1) {
+             return this.state.loanDetail.EndDate;
         }
         return this.state.trancheEndDate;
+    }
+    
+    addTranche = (tranche) => {
+        this.setState(prevState => ({
+            counter:
+                prevState.counter + 1,
+          }));
+
+        this.setState(prevState => ({
+            tranches: [
+                ...prevState.tranches,
+                tranche
+            ]
+          }));
+        
+    }
+    checkDisability = () => {
+        if(this.state.trancheNo && this.state.counter === Number(this.state.trancheNo)) {
+            return false;
+        }
+        return true;
+    }
+    handleSubmit = () => {
+        let postObj = {
+            "RequisitionNo": this.state.loanDetail.RequisitionNo,
+            "Tranches": this.state.tranches
+        }
+        axios.post(`http://delvmplwindpark00:8080/loan`, { postObj })
+        .then(res => {
+          console.log(res);
+          console.log(res.data);
+        });
     }
     render() {
         const { classes } = this.props;
@@ -156,7 +195,7 @@ class SyndicateForm extends React.Component {
                                 <Chip
                                     className={classes.chip}
                                     label="Add Tranche"
-                                    clickable
+                                    clickable= {this.checkDisability()}
                                     color="primary"
                                     onDelete={this.handleOpen}
                                     deleteIcon={<AddIcon />}
@@ -170,17 +209,28 @@ class SyndicateForm extends React.Component {
                                     <Checkout 
                                     trancheAmount={this.state.eachTrancheAmount}
                                     trancheStartDate={this.setStartTrancheDate()}
+                                    loanEndDate = {this.state.loanDetail.EndDate}
                                     trancheEndDate={this.setEndTrancheDate()}
-                                    trancheNo={(this.state.tranches.length + 1)}
+                                    trancheNo={this.state.trancheNo}
+                                    counter={this.state.counter}
                                     addTranche={this.addTranche}/>
                                 </Modal>
                                 <Grid item xs={12} className={classes.chip}>
                                 <TranchesOverview trancheList={this.state.tranches}
                                     totaltranches={this.state.tranches.length}
-                                    rowsPerPage={this.state.tranchesRowsPerPage}
                                     page={this.state.tranchesPage}
-                                    handleChangePage={this.handleChangePage}
-                                    handleChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+                                    />
+                                    </Grid>
+                                    <Grid item xs={12} >
+                                    <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className= {classes.submitBtn}
+                                    onClick={() => this.handleSubmit()}
+                                    disabled={this.checkDisability()}
+                                    >
+                                    Submit
+                                    </Button>
                                     </Grid>
                                     </Grid>
                             </Paper>

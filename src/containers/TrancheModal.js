@@ -94,7 +94,10 @@ class Checkout extends Component {
             drawdowns: [],
             ratioExceeded: false,
             totalRatio: 0,
-            amountExceeded: false
+            totalAmount: 0,
+            amountExceeded: false,
+            endDateLimitReached: false,
+            trancheEndDateLimitReached: false
         };
         console.log(this.props)
         this.handleEndDate = this.handleEndDate.bind(this);
@@ -105,16 +108,30 @@ class Checkout extends Component {
     }
     
  componentDidMount() {
-     this.abv();
+    
  }
- abv =() => {
-   console.log('adsdasdadas');
- }
-  handleNext = () => {
+  handleNext = (startDate) => {
     const { activeStep } = this.state;
     if(activeStep === steps.length - 2) {
       this.addParticipant();
      // this.setDrawdownStartDate();
+    }
+    if(activeStep === steps.length - 1) {
+      let postObj = {};
+      if(!this.state.currentDrawdownObj.amount) {
+        postObj = this.createTrancheObject();
+        postObj.Drawdowns = this.state.drawdowns;
+      } else {
+        let lastdrawdown = true;
+        let lastdrawdownobj = this.addDrawdown(startDate, lastdrawdown);
+        let arr = this.state.drawdowns.slice();
+         postObj = this.createTrancheObject(lastdrawdownobj);
+         arr.push(lastdrawdownobj);
+        postObj.Drawdowns = arr;
+        
+      }
+      
+      this.props.addTranche(postObj);
     }
     this.setState({
       activeStep: activeStep + 1,
@@ -134,8 +151,21 @@ class Checkout extends Component {
     });
   };
   handleEndDate = function(e) {
-    this.setState({trancheEndDate: e.target.value});
+    let value = e.target.value;
+    this.setState({trancheEndDate: value});
+    if(value === this.props.loanEndDate) {
+      this.setState({trancheEndDateLimitReached :true});
+    }
+  }
+  createTrancheObject = () => {
+    let tranche = {};
+    tranche.EndDate = this.state.trancheEndDate;
+    tranche.StartDate = this.state.trancheStartDate;
+   
+    tranche.Amount = this.state.trancheAmount;
+    tranche.Participants = this.state.participants;
     
+    return tranche;
   }
   checkDisability = () => {
     if(this.state.currentBankObj.bank && this.state.currentBankObj.ratio
@@ -146,7 +176,7 @@ class Checkout extends Component {
   }
   checkDrawdownDisability = () => {
     if(this.state.currentDrawdownObj.amount && this.state.currentDrawdownObj.endDate
-      && !this.state.amountExceeded) {
+      && !this.state.amountExceeded && !this.state.endDateLimitReached) {
       return true;
     }
     return false;
@@ -199,8 +229,15 @@ class Checkout extends Component {
   }
   setCurrentDrawdownObj = (e,prop) => {
     let value = e.target.value;
+    let penultimateday = moment(this.state.trancheEndDate,
+      'YYYY-MM-DD').subtract(1, 'days');
+    penultimateday = penultimateday.format('YYYY-MM-DD');
     if(prop === "endDate") {
-      
+      if(value === this.state.trancheEndDate || value === penultimateday) {
+        this.setState({endDateLimitReached: true});
+      } else{
+        this.setState({endDateLimitReached: false});
+      }
       
       this.setState(prevState => ({
         currentDrawdownObj: {
@@ -273,7 +310,7 @@ class Checkout extends Component {
       this.setState({ currentBankObj: newObj});
     }
   }
-  addDrawdown = (startDate) => {
+  addDrawdown = (startDate, lastdrawdown) => {
     if(this.state.currentDrawdownObj.amount && this.state.currentDrawdownObj.endDate) {
       let finalObj = this.state.currentDrawdownObj;
       finalObj.startDate = startDate;
@@ -283,6 +320,7 @@ class Checkout extends Component {
             finalObj
         ]
       }));
+      
       let newObj = {
         amount: '',
         startDate: '',
@@ -292,6 +330,10 @@ class Checkout extends Component {
 
       this.setState({totalAmount: totalAmount});
       this.setState({ currentDrawdownObj: newObj});
+      if(lastdrawdown) {
+         return finalObj;
+      }
+      
     }
   }
   disableNext = () => {
@@ -301,8 +343,19 @@ class Checkout extends Component {
         return false;
       }
       return true;
+    } else if (activeStep === steps.length - 1) {
+      if(this.state.amountExceeded && this.state.endDateLimitReached) {
+        return false;
+      }
+      return true;
     }
     return false;
+  }
+  setEndDateLimitMin = () => {
+    let day = moment(this.state.trancheStartDate,
+      'YYYY-MM-DD').add(1, 'days');
+    day = day.format('YYYY-MM-DD');
+    return day;
   }
   getStepContent(step,startDate,endDateLimit) {
     switch (step) {
@@ -312,6 +365,9 @@ class Checkout extends Component {
             startDate={this.state.trancheStartDate}
             endDate={this.state.trancheEndDate}
             setEndDate={this.handleEndDate}
+            endDateLimitMax={this.props.loanEndDate}
+            endDateLimitMin={this.setEndDateLimitMin()}
+            trancheEndDateLimitReached={this.state.trancheEndDateLimitReached}
         />;
       case 1:
         return <AddParticipants checkDisability={this.checkDisability}
@@ -331,9 +387,10 @@ class Checkout extends Component {
                                 startDate = {startDate}
                                 checkDrawdownAmount={this.checkDrawdownAmount}
                                 amountExceeded = {this.state.amountExceeded}
+                                endDateLimitReached = {this.state.endDateLimitReached}
                                 addDrawdown = {this.addDrawdown}
                                 drawdowns ={this.state.drawdowns}
-                                totalAmount={this.state.totalAmount}/>;
+                                totalAmountRemaining={(Number(this.state.trancheAmount) - Number(this.state.totalAmount))}/>;
       default:
         throw new Error('Unknown step');
     }
@@ -363,11 +420,10 @@ class Checkout extends Component {
               {activeStep === steps.length ? (
                 <React.Fragment>
                   <Typography variant="headline" gutterBottom>
-                    Thank you for your order.
+                    Tranche #{this.props.counter} Created Successfully.
                   </Typography>
                   <Typography variant="subheading">
-                    Your order number is #2001539. We have emailed your oder confirmation, and will
-                    send you an update when your order has shipped.
+                    Remaining Tranches: {this.props.trancheNo - this.props.counter}
                   </Typography>
                 </React.Fragment>
               ) : (
@@ -382,7 +438,7 @@ class Checkout extends Component {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={this.handleNext}
+                      onClick={() => this.handleNext(startDate)}
                       disabled={this.disableNext()}
                       className={classes.button}
                     >

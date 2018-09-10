@@ -14,7 +14,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 const styles = theme => ({
   root: {
-   width: '80%',
    marginTop: theme.spacing.unit * 3,
    overflowX: 'auto',
  }, table: {
@@ -24,9 +23,19 @@ const styles = theme => ({
    padding: '1px 56px 1px 24px',
  }
 });
+function getParticipants(data) {
+  let banks='';
+  for(let i=0; i<data.length; i++) {
+    banks = banks.concat(data[i].bank);
+    if(i !== data.length -1)
+    banks = banks.concat(" ,");
+  }
+  return banks;
+};
 function TranchesOverview(props) {
   const {classes} = props;
   const emptyRows = props.rowsPerPage - Math.min(props.rowsPerPage, props.totalLoans - props.page * props.rowsPerPage);
+  
   return (
     <div >
       <h3> Tranches Overview</h3>
@@ -47,14 +56,14 @@ function TranchesOverview(props) {
         <TableBody>
           {Object.keys(props.trancheList).map(row => {
             return (
-              <TableRow key={props.trancheList[row].trancheNo}>
+              <TableRow key={props.trancheList[row].StartDate}>
                 <TableCell component="th" scope="row">
-                  {props.trancheList[row].trancheNo}
+                  {Number(row) + 1}
                 </TableCell>
-                <TableCell numeric>{props.trancheList[row].amount}</TableCell>
-                <TableCell numeric>{props.trancheList[row].startDate}</TableCell>
-                <TableCell numeric>{props.trancheList[row].endDate}</TableCell>
-                <TableCell numeric>{props.trancheList[row].participants}</TableCell>
+                <TableCell numeric>{props.trancheList[row].Amount}</TableCell>
+                <TableCell numeric>{props.trancheList[row].StartDate}</TableCell>
+                <TableCell numeric>{props.trancheList[row].EndDate}</TableCell>
+                <TableCell numeric>{getParticipants(props.trancheList[row].Participants)}</TableCell>
                 <TableCell numeric><button>View</button></TableCell>
               </TableRow>
             );
@@ -65,18 +74,7 @@ function TranchesOverview(props) {
                 </TableRow>
               )}
         </TableBody>
-        <TableFooter>
-              <TableRow>
-                <TablePagination
-                  colSpan={3}
-                  count={props.totalLoans}
-                  rowsPerPage={props.rowsPerPage}
-                  page={props.page}
-                  onChangePage={props.handleChangePage}
-                  onChangeRowsPerPage={props.handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
+        
       </Table>
     </Paper> : <h4>No Tranche added yet. </h4>}
     </div>)

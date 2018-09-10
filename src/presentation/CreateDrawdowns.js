@@ -84,7 +84,6 @@ function getDrawdownRows(data) {
 function CreateDrawdowns(props) {
     const { classes } = props;
     let arr = [];
-    let ratio = 100 - (props.totalRatio);
     return (
         <div className="">
             <Grid container>
@@ -92,7 +91,7 @@ function CreateDrawdowns(props) {
             <h3 className={classes.header}> Create Drawdowns</h3>
             </Grid>
             <Grid item xs={6}>
-              { console.log('click',props.checkDisability())}
+              { console.log('click')}
             <Chip
             id="addParticipant"
             className={classes.chip}
@@ -104,9 +103,12 @@ function CreateDrawdowns(props) {
         />
         
         </Grid>
-        <Grid item xs={12} sm={6}>
-           {props.ratioExceeded ? "Tranche Amount Splitted" : "Amount Remaining: " + ratio}
-            </Grid>
+        <Grid item xs={12} sm={12}>
+           {props.amountExceeded ? "Tranche Amount Splitted" : "Amount Remaining: " + props.totalAmountRemaining}
+           </Grid>
+           <Grid item xs={12} sm={12}>
+           {props.endDateLimitReached ? "Tranche End Date Reached" : "Tranche End Date: " + props.trancheEndDate}
+           </Grid>
         <Grid item xs={12}>
             <Paper className={classes.root}>
                 <Table className={classes.table}>
@@ -121,7 +123,7 @@ function CreateDrawdowns(props) {
                     </TableHead>
                     <TableBody>
                     {getDrawdownRows(props.drawdowns)}
-                    
+                    {!(props.totalAmountRemaining === 0) ?  
                         <TableRow>
                             <TableCell component="th" scope="row">
                                 {props.drawdowns.length + 1}
@@ -172,7 +174,7 @@ function CreateDrawdowns(props) {
                                 <DeleteIcon />
                             </Button>
                             </TableCell>
-                        </TableRow> 
+                        </TableRow> : null }
                     </TableBody>
                 </Table>
             </Paper>

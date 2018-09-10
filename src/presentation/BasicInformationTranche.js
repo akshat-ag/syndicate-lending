@@ -8,6 +8,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
+
 function BasicInformationTranche(props) {
   return (
     <React.Fragment>
@@ -45,6 +46,8 @@ function BasicInformationTranche(props) {
           type="date"
           id="end-date"
           value={props.endDate}
+          inputProps= {{ min: props.endDateLimitMin, max: props.endDateLimitMax, }}
+          error = {props.trancheEndDateLimitReached}
           onChange={(e) => props.setEndDate(e)}
           startAdornment={<InputAdornment position="start"></InputAdornment>}
         />
