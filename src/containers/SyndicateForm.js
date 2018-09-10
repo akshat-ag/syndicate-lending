@@ -16,17 +16,19 @@ import TranchesOverview from '../presentation/TranchesOverview.js';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import {NotificationManager} from 'react-notifications';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
 const styles = theme => ({
     layout: {
         width: 'auto',
-        marginLeft: theme.spacing.unit * 2,
+        marginLeft: theme.spacing.unit * 0,
         marginRight: theme.spacing.unit * 2,
+        marginTop: theme.spacing.unit * 0.4,
         [theme.breakpoints.up(900 + theme.spacing.unit * 2 * 2)]: {
             width: 900,
-            marginLeft: 'auto',
+            marginLeft: theme.spacing.unit * 0,
             marginRight: 'auto',
         },
     },
@@ -49,7 +51,10 @@ const styles = theme => ({
     },
     submitBtn: {
         marginTop: theme.spacing.unit * 3,
-        marginLeft: theme.spacing.unit * 1.5, 
+        marginLeft: theme.spacing.unit * 1.5
+    },
+    loanSummaryWell: {
+
     }
 })
 class SyndicateForm extends React.Component {
@@ -61,7 +66,8 @@ class SyndicateForm extends React.Component {
             trancheNo: '',
             trancheStartDate: '',
             trancheEndDate: '',
-            counter: 0
+            counter: 0,
+            redirect: false
         };
         this.handleOpen = this.handleOpen.bind(this);
         this.checkDisability = this.checkDisability.bind(this);
@@ -133,22 +139,53 @@ class SyndicateForm extends React.Component {
         return true;
     }
     handleSubmit = () => {
+        
         let postObj = {
             "RequisitionNo": this.state.loanDetail.RequisitionNo,
             "Tranches": this.state.tranches
         }
-        axios.post(`http://delvmplwindpark00:8080/loan`, { postObj })
+        for(let i=0; i<this.state.tranches.length; i++) {
+            let participants = [];
+            for(let w=0; w<this.state.tranches[i].Participants.length; w++) {
+                let obj = {};
+                obj.BankName = this.state.tranches[i].Participants[w].bankPostname;
+                obj.AssetRatio = this.state.tranches[i].Participants[w].ratio;
+                participants.push(obj);
+            }
+            postObj.Tranches[i].Participants = participants;
+            let amount = postObj.Tranches[i].Amount.toString();
+            postObj.Tranches[i].Amount = amount;
+        }
+        for(let i=0; i<this.state.tranches.length; i++) {
+            let drawdowns = [];
+            for(let w=0; w<this.state.tranches[i].Drawdowns.length; w++) {
+                let obj = {};
+                obj.StartDate = this.state.tranches[i].Drawdowns[w].startDate;
+                obj.EndDate = this.state.tranches[i].Drawdowns[w].endDate;
+                obj.Amount = this.state.tranches[i].Drawdowns[w].amount;
+                drawdowns.push(obj);
+            }
+            
+            postObj.Tranches[i].Drawdowns = drawdowns;
+        }
+        
+        axios.post(`http://delvmplwindpark00:8080/loan`, postObj )
         .then(res => {
+            this.setState({redirect: true})
           console.log(res);
           console.log(res.data);
+          NotificationManager.success('Success message', 'Syndicate Formed');
         });
     }
     render() {
         const { classes } = this.props;
         console.log('Hey ash', this.state);
-        if (this.state.redirect && this.state.loanToRedirect) {
-            return <Redirect push to={`/loan/${this.state.loanToRedirect}`} />;
-        }
+        if(this.state.redirect === true) {
+			return <Redirect push to={`/dashboard`}/>;
+		}
+        // if (this.state.redirect && this.state.loanToRedirect) {
+        //     return <Redirect push to={`/loan/${this.state.loanToRedirect}`} />;
+        // }
         if (this.state.loanDetail) {
             return (
                 <div id="syndicateForm" className={classes.layout}>
@@ -157,22 +194,22 @@ class SyndicateForm extends React.Component {
                             <Paper className={classes.badaWell}>
                                 <Grid container>
                                     <Grid item xs={12}>
-                                <Paper id="syndiWell">
+                                <Paper className={classes.loanSummaryWell} id="syndiWell">
                                     <Grid container>
                                         <Grid item md={3}>
-                                            <Typography variant="Subheading" color="inherit">
+                                            <Typography variant="Subheading" color="inherit" className="wellText">
                                                 Loan Id: {this.state.loanDetail.RequisitionNo}
                                             </Typography>
                                         </Grid>
                                         <Grid item md={3}>
-                                            <Typography variant="Subheading" color="inherit">
+                                            <Typography variant="Subheading" color="inherit" className="wellText">
                                                 Loan Amount: {this.state.loanDetail.RequisitionAmount}
                                             </Typography>
                                         </Grid>
                                     </Grid>
                                     <Grid container className={classes.borrwerLine}>
                                         <Grid item md={3}>
-                                            <Typography variant="Subheading" color="inherit">
+                                            <Typography variant="Subheading" color="inherit" className="wellText">
                                                 Borrower: {this.state.loanDetail.InstitutionName}
                                             </Typography>
                                         </Grid>
@@ -194,6 +231,7 @@ class SyndicateForm extends React.Component {
                                 <Grid item xs={12}>
                                 <Chip
                                     className={classes.chip}
+                                    id="addtranch"
                                     label="Add Tranche"
                                     clickable= {this.checkDisability()}
                                     color="primary"
@@ -224,6 +262,7 @@ class SyndicateForm extends React.Component {
                                     <Grid item xs={12} >
                                     <Button
                                     variant="contained"
+                                    id={(this.checkDisability()) ? "disabledsubBtn" : "submtbtn"}
                                     color="primary"
                                     className= {classes.submitBtn}
                                     onClick={() => this.handleSubmit()}

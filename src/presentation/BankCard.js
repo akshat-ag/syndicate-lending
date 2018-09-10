@@ -7,7 +7,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import wellsfargo from '../static/images/citibank.png';
+import citibank from '../static/images/citibank.png';
+import wellsfargo from '../static/images/wellsfargo.png';
+import jp from '../static/images/jp.png';
 import Grid from '@material-ui/core/Grid';
 const styles = {
     card: {
@@ -16,13 +18,23 @@ const styles = {
     media: {
       height: 0,
       paddingTop: '56.25%', // 16:9
+      marginTop: 10
     },
     content: {
-      paddingTop: 0,
+      paddingTop: 20,
       paddingLeft: 15,
       paddingRight: 0
     },
   };
+  function getImage(bankDetails) {
+    if(bankDetails.BankName === 'citi') {
+      return citibank;
+    } else if(bankDetails.BankName === 'wells') {
+      return wellsfargo;
+    } else {
+      return jp;
+    }
+  }
   function SimpleMediaCard(props) {
     const { classes } = props;
     console.log(props.bankDetails + "hey");
@@ -51,7 +63,7 @@ const styles = {
           <CardMedia
             id="card"
             className={classes.media}
-            image={wellsfargo}
+            image={getImage(props.bankDetails)}
             title="ICICI Bank"
           />
           <CardContent className={classes.content}>

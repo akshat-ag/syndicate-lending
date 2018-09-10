@@ -41,9 +41,12 @@ const MenuProps = {
 };
 
 const names = [
-  'CitiBank',
-  'Wells Fargo',
-  'JP Morgan'
+  {name: 'CitiBank',
+  value: 'citi'},
+  {name: 'Wells Fargo',
+  value: 'wells'},
+  {name: 'JP Morgan',
+	value: 'jp'}
 ];
 
 class MultipleSelect extends React.Component {
@@ -84,9 +87,9 @@ class MultipleSelect extends React.Component {
             MenuProps={MenuProps}
           >
             {names.map(name => (
-              <MenuItem key={name} value={name}>
-                <Checkbox color='primary' checked={this.state.name.indexOf(name) > -1} />
-                <ListItemText primary={name} />
+              <MenuItem key={name.value} value={name.value}>
+                <Checkbox color='primary' checked={this.state.name.indexOf(name.value) > -1} />
+                <ListItemText primary={name.name} />
               </MenuItem>
             ))}
           </Select>

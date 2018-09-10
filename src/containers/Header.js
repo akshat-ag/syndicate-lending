@@ -10,7 +10,7 @@ export default class Header extends React.Component {
 	render() {
 		return (
 			 <div >
-        		<AppBar position="static">
+        		<AppBar position="static" id="headerr">
             		<Toolbar id="header">
                 		<Typography variant="title" color="inherit">
                			Syndicate Loans Platform
@@ -19,6 +19,7 @@ export default class Header extends React.Component {
 			            <Tab label="Home"  to='/' component={NavLink}/>
 			            <Tab label="Initiate Application" to='/application' component={NavLink}/>
 		          	</Tabs>
+					  <Button id="logout">Logout</Button>
             		</Toolbar>
             		
         		</AppBar>

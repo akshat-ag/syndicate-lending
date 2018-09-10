@@ -8,7 +8,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from "@material-ui/core/Grid";
 class Dashboard extends Component {
     constructor(props) {
-    	super(props);
+        super(props);
+        this.authenticedServiceInstance = AuthenticatedServiceInstance;
     	this.state = {
             approvedLoansRowsPerPage: 5,
             approvedLoansPage: 0,
@@ -19,7 +20,9 @@ class Dashboard extends Component {
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     }
     componentDidMount() {
-        axios.get(`http://delvmplwindpark00:8080/requisitions/abc`)
+        let user = this.authenticedServiceInstance.getUserInfo();
+        let role = user.orgId;
+        axios.get(`http://delvmplwindpark00:8080/requisitions/` + role)
             .then(({ data: loanList }) => {
              // console.log('user', loanList);
             let approvedLoans = [];

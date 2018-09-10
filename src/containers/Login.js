@@ -18,11 +18,16 @@ class Login extends Component {
     }
     handleSubmit(e) {
         if (this.state.username.length > 0 && this.state.password.length > 0) {
-            this.authenticedServiceInstance.authenticate();
+            let postObj= {};
+            postObj.username = this.state.username;
+            postObj.password = this.state.password;
+            let isLoggedIn = this.authenticedServiceInstance.authenticate(postObj);
+            if(isLoggedIn.success) {
             console.log("User now logged in.." + AuthenticatedServiceInstance.isLoggedIn());
             this.setState({
                 redirectToReferrer: true
             });
+        }
             e.preventDefault();
         }
     }
@@ -32,7 +37,7 @@ class Login extends Component {
         });
     }
     passwordValidation(value) {
-        if (!new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).test(value)) {
+        if (new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).test(value)) {
             return {
                 error: true,
                 errorMsg: 'Password Should be a minimum of eight characters, at least one uppercase letter,' +

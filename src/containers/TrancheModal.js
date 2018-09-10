@@ -57,17 +57,20 @@ const banks = [
                 {
                   "BankId": 1,
               "BankName": "CitiBank",
+              "bankPostname": "citi",
               "ContactFirstName": "Patrick",
               "ContactLastName": "Sprows",
                 },
                 {
                   "BankId": 2,
                   "BankName": "Wells Fargo",
+                  "bankPostname": "wells",
                   "ContactFirstName": "Adam",
                   "ContactLastName": "McLory"
                 }, {
                   "BankId": 3,
                   "BankName": "JP Morgan",
+                  "bankPostname": "jp",
                   "ContactFirstName": "Billy",
                   "ContactLastName": "Brown"
                 }
@@ -211,7 +214,8 @@ class Checkout extends Component {
             bank: currObj.BankName,
             bankId: value,
             ContactFirstName: currObj.ContactFirstName,
-            ContactLastName: currObj.ContactLastName
+            ContactLastName: currObj.ContactLastName,
+            bankPostname: currObj.bankPostname
         }
       }));
     } else if(prop === "ratio") {
@@ -294,6 +298,7 @@ class Checkout extends Component {
   }
   addParticipant = () => {
     if(this.state.currentBankObj.bankId && this.state.currentBankObj.ratio) {
+      
       this.setState(prevState => ({
         participants: [
             ...prevState.participants,
@@ -409,10 +414,10 @@ class Checkout extends Component {
             <Typography variant="title" align="center">
               Add Tranche
             </Typography>
-            <Stepper activeStep={activeStep} className={classes.stepper}>
+            <Stepper activeStep={activeStep} className={classes.stepper} >
               {steps.map(label => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
+                <Step id="stepper1" key={label}>
+                  <StepLabel id="stepper">{label}</StepLabel>
                 </Step>
               ))}
             </Stepper>

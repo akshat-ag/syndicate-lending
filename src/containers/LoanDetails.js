@@ -11,7 +11,7 @@ import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from 'react-router-dom';
 
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
 export default class LoanDetails extends React.Component {

@@ -9,7 +9,8 @@ import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 class LeadArrangerDashboard extends Component {
     constructor(props) {
-    	super(props);
+        super(props);
+        this.authenticedServiceInstance = AuthenticatedServiceInstance;
     	this.state = {
             quotedLoans: [],
             acceptedLoans: [],
@@ -22,17 +23,23 @@ class LeadArrangerDashboard extends Component {
         this.showLoanDetails = this.showLoanDetails.bind(this);
     }
     componentDidMount() {
-        const arrangerName = 'citi';
+        const arrangerName = this.authenticedServiceInstance.getUserInfo().orgId;
+        this.setState({arrangerName: arrangerName});
         let loans =  axios.get('http://delvmplwindpark00:8080/requisitions/la/' + arrangerName)
         .then(({ data: loanList }) => {
          // console.log('user', loanList);
         let approvedLoans = [];
         let biddingLoans = [];
         for( let i = 0, max = loanList.length; i < max ; i++ ){
-            if( loanList[i].RequisitionStatus === "Approved" ){
+            if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
                 approvedLoans.push(loanList[i]);
-            } else {
-                biddingLoans.push(loanList[i]);
+            } else if(loanList[i].RequisitionStatus === "Pending"){
+                for(let j=0; j< loanList[i].RoI.length; j++) {
+                    if(loanList[i].RoI[j].BankName === arrangerName) {
+                        biddingLoans.push(loanList[i]);
+                    }
+                }
+                
             }
         } 
         this.setState({ acceptedLoans: approvedLoans, biddingLoans: biddingLoans });
@@ -67,7 +74,7 @@ class LeadArrangerDashboard extends Component {
         if(loanObj === -1) {
             let obj = {
              RequisitionNo:prop,
-             leadArranger:'citi',
+             leadArranger: this.state.arrangerName,
              rate: e.target.value }
              this.setState({
                 quotedLoans: [...this.state.quotedLoans, obj]

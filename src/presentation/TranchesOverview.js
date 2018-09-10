@@ -23,10 +23,24 @@ const styles = theme => ({
    padding: '1px 56px 1px 24px',
  }
 });
+const names = [
+  {name: 'CitiBank',
+  value: 'citi'},
+  {name: 'Wells Fargo',
+  value: 'wells'},
+  {name: 'JP Morgan',
+	value: 'jp'}
+];
 function getParticipants(data) {
   let banks='';
+  let name;
   for(let i=0; i<data.length; i++) {
-    banks = banks.concat(data[i].bank);
+    for(let q=0; q<names.length; q++) {
+      if(names.value === data[i].bank) {
+        name = names.name;
+      }
+    }
+    banks = banks.concat(name);
     if(i !== data.length -1)
     banks = banks.concat(" ,");
   }
