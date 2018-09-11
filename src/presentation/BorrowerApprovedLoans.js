@@ -24,6 +24,11 @@ const styles = theme => ({
    padding: '1px 56px 1px 24px',
  }
 });
+// {emptyRows > 0 && (
+//   <TableRow style={{ height: 48 * emptyRows }}>
+//     <TableCell colSpan={6} />
+//   </TableRow>
+// )}
 function ApprovedLoans(props) {
   const {classes} = props;
   const emptyRows = props.rowsPerPage - Math.min(props.rowsPerPage, props.totalLoans - props.page * props.rowsPerPage);
@@ -61,11 +66,7 @@ function ApprovedLoans(props) {
               </TableRow>
             );
           })}
-          {emptyRows > 0 && (
-                <TableRow style={{ height: 48 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
+          
         </TableBody>
         <TableFooter>
               <TableRow>

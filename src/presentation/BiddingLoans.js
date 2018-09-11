@@ -53,7 +53,7 @@ function BiddingLoans(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.keys(props.loanList).map(row => {
+          {(props.loanList.length > 0) ? Object.keys(props.loanList).map(row => {
             return (
               <TableRow key={props.loanList[row].RequisitionNo}>
                 <TableCell component="th" scope="row">
@@ -79,7 +79,7 @@ function BiddingLoans(props) {
                 <TableCell numeric><Button variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
               </TableRow>
             );
-          })}
+          }) : 'No Bidding Loans to display'}
         </TableBody>
       </Table>
      
