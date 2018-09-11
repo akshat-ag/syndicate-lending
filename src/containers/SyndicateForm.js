@@ -74,7 +74,7 @@ class SyndicateForm extends React.Component {
     }
     componentDidMount() {
         const { match: { params } } = this.props;
-        axios.get(`/requisition/${params.id}`)
+        axios.get(`http://delvmplwindpark00:8080/requisition/${params.id}`)
 			.then(({ data: loanDetail }) => {
 			    this.setState({ loanDetail: loanDetail });
 				this.setState({ banksList: loanDetail.RoI });
@@ -169,7 +169,7 @@ class SyndicateForm extends React.Component {
             postObj.Tranches[i].Drawdowns = drawdowns;
         }
         
-        axios.post(`/loan`, postObj )
+        axios.post(`http://delvmplwindpark00:8080/loan`, postObj )
         .then(res => {
             this.setState({redirect: true})
           console.log(res);

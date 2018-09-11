@@ -23,7 +23,7 @@ const styles = theme => ({
   height: theme.spacing.unit * 5
 },
 tablecell: {
-  padding: '1px 56px 1px 24px',
+  padding: '1px 28px 1px 19px',
   fontWeight: 500,
   fontSize: theme.spacing.unit * 1.7
 },
@@ -41,8 +41,7 @@ function BorrowerAcceptedLoans(props) {
         <TableHead>
           <TableRow className={classes.tablehead}>
             <TableCell className={classes.tablecell}>Loan Id</TableCell>
-            <TableCell className={classes.tablecell}>Borrower First Name</TableCell>
-            <TableCell className={classes.tablecell}>Borrower Second Name</TableCell>
+            <TableCell className={classes.tablecell}>Borrower </TableCell>
             <TableCell className={classes.tablecell}>Loan Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
@@ -57,14 +56,14 @@ function BorrowerAcceptedLoans(props) {
                 <TableCell component="th" scope="row">
                   {props.loanList[row].RequisitionNo}
                 </TableCell>
-                <TableCell numeric>{props.loanList[row].FirstName}</TableCell>
-                <TableCell numeric>{props.loanList[row].LastName}</TableCell>
-                <TableCell numeric>{props.loanList[row].RequisitionAmount}</TableCell>
-                <TableCell numeric>{props.loanList[row].EndDate}</TableCell>
+                <TableCell >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
+                
+                <TableCell >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell >{props.loanList[row].EndDate}</TableCell>
 
-                <TableCell numeric>{props.loanList[row].Rate}</TableCell>
-                <TableCell numeric><Button onClick={() => {props.showLoan(props.loanList[row].RequisitionNo);}}>Loan Details</Button></TableCell>
-                <TableCell numeric><Button>Generate Information Memo</Button></TableCell>
+                <TableCell >{props.loanList[row].Rate}</TableCell>
+                <TableCell ><Button onClick={() => {props.showLoan(props.loanList[row].RequisitionNo);}}>Loan Details</Button></TableCell>
+                <TableCell ><Button>Generate Information Memo</Button></TableCell>
               </TableRow>
             );
           }): <TableRow>

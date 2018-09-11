@@ -41,6 +41,10 @@ const styles = theme => ({
   },
   stepper: {
     padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 5}px`,
+    
+  },
+  iconContainer: {
+    color: '#119ed4'
   },
   buttons: {
     display: 'flex',
@@ -417,7 +421,7 @@ class Checkout extends Component {
             <Stepper activeStep={activeStep} className={classes.stepper} >
               {steps.map(label => (
                 <Step id="stepper1" key={label}>
-                  <StepLabel id="stepper">{label}</StepLabel>
+                  <StepLabel id="stepper" classes={{iconContainer: classes.iconContainer}}>{label}</StepLabel>
                 </Step>
               ))}
             </Stepper>

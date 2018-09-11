@@ -10,7 +10,8 @@ class Login extends Component {
         this.state = {
             redirectToReferrer: false,
             username: '',
-            password: ''
+            password: '',
+            error: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.updateData = this.updateData.bind(this);
@@ -27,6 +28,8 @@ class Login extends Component {
             this.setState({
                 redirectToReferrer: true
             });
+        } else {
+            this.setState({error: true});
         }
             e.preventDefault();
         }
@@ -51,7 +54,7 @@ class Login extends Component {
     }
 
     render() {
-        const { from } = this.props.location.state || { from: { pathname: "/" } };
+        const { from } = { from: { pathname: "/" } };
         const { redirectToReferrer } = this.state;
         if (redirectToReferrer) {
             console.dir(from);
@@ -63,7 +66,8 @@ class Login extends Component {
         return (
             <LoginForm updateData={this.updateData}
                 onSubmit={this.handleSubmit}
-                passwordValidation={this.passwordValidation} 
+                passwordValidation={this.passwordValidation}
+                error={this.state.error}
                 />
         );
     }

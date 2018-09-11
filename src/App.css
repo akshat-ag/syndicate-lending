@@ -212,3 +212,6 @@ body {
 #noloan {
   text-align: center
 }
+#loginerror {
+  color: red
+}

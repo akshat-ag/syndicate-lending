@@ -49,8 +49,7 @@ function BiddingLoans(props) {
         <TableHead>
           <TableRow className={classes.tablehead}>
             <TableCell className={classes.tablecell}>Loan Id</TableCell>
-            <TableCell className={classes.tablecell}>Borrower First Name</TableCell>
-            <TableCell className={classes.tablecell}>Borrower Second Name</TableCell>
+            <TableCell className={classes.tablecell}>Borrower</TableCell>
             <TableCell className={classes.tablecell}>Loan Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
@@ -65,12 +64,12 @@ function BiddingLoans(props) {
                 <TableCell component="th" scope="row">
                   {props.loanList[row].RequisitionNo}
                 </TableCell>
-                <TableCell numeric>{props.loanList[row].FirstName}</TableCell>
-                <TableCell numeric>{props.loanList[row].LastName}</TableCell>
-                <TableCell numeric>{props.loanList[row].RequisitionAmount}</TableCell>
-                <TableCell numeric>{props.loanList[row].EndDate}</TableCell>
+                <TableCell >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
+                
+                <TableCell >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell >{props.loanList[row].EndDate}</TableCell>
 
-                <TableCell numeric>
+                <TableCell >
                 <TextField
                 required
                 id="simple-start-adornment"
@@ -81,8 +80,8 @@ function BiddingLoans(props) {
                 }}
               />
                 </TableCell>
-                <TableCell numeric><Button id="acceptBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button></TableCell>
-                <TableCell numeric><Button variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
+                <TableCell ><Button id="acceptBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button></TableCell>
+                <TableCell ><Button variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
               </TableRow>
             );
           }) : <TableRow>

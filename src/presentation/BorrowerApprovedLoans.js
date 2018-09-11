@@ -41,14 +41,14 @@ function ApprovedLoans(props) {
   const emptyRows = props.rowsPerPage - Math.min(props.rowsPerPage, props.totalLoans - props.page * props.rowsPerPage);
   return (
     <div className="root1">
-      <h3> Approved Loans</h3>
+      <h3> Approved Requistions</h3>
       
       
       <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
           <TableRow className={classes.tablehead}>
-            <TableCell className={classes.tablecell}>Loan Id</TableCell>
+            <TableCell className={classes.tablecell}>Requsition Id</TableCell>
             <TableCell className={classes.tablecell}>Borrower First Name</TableCell>
             <TableCell className={classes.tablecell}>Borrower Second Name</TableCell>
             <TableCell className={classes.tablecell}>Loan Sanctioned</TableCell>
@@ -76,7 +76,7 @@ function ApprovedLoans(props) {
           <TableCell ></TableCell>
           
           <TableCell ></TableCell>
-          <TableCell > <h4 id="noloan"> No Approved Loans Available  </h4></TableCell>
+          <TableCell > <h4 id="noloan"> No Approved Requistions Available  </h4></TableCell>
           </TableRow>}
           
         </TableBody>

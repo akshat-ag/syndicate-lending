@@ -83,10 +83,13 @@ function LoginForm(props) {
                 color="primary"
                 className={classes.submit}
                 onClick={props.onSubmit}
+                
               >
                 Sign in
             </Button>
+            
             </form>
+            {props.error ? <h5 id="loginerror" >Entered UserName or Password is incorrect </h5> : null}
           </Paper>
         </main>
       </React.Fragment>

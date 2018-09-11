@@ -36,8 +36,8 @@ function getParticipants(data) {
   let name;
   for(let i=0; i<data.length; i++) {
     for(let q=0; q<names.length; q++) {
-      if(names.value === data[i].bank) {
-        name = names.name;
+      if(names[q].value === data[i].bankPostname) {
+        name = names[q].name;
       }
     }
     banks = banks.concat(name);

@@ -77,7 +77,7 @@ class LoanApplication extends Component {
 	      
 	    };
 
-	    axios.post(`/requisition/`,  postObj )
+	    axios.post(`http://delvmplwindpark00:8080/requisition/`,  postObj )
 	      .then(res => {
 	        console.log(res);
 			console.log(res.data);

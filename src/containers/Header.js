@@ -16,6 +16,10 @@ export default class Header extends React.Component {
 		this.authenticedServiceInstance.toggleLogin();
 		window.location.reload();
 	}
+	checkUser = () => {
+		let role = this.authenticedServiceInstance.getUserRole();
+		return role;
+	}
 	render() {
 		return (
 			 <div >
@@ -26,7 +30,8 @@ export default class Header extends React.Component {
                			</Typography>
                			<Tabs >
 			            <Tab label="Home"  to='/' component={NavLink}/>
-			            <Tab label="Initiate Application" to='/application' component={NavLink}/>
+						{(this.checkUser() === "borrower") ?
+			            <Tab label="Initiate Application" to='/application' component={NavLink}/> : null}
 		          	</Tabs>
 					  <Button id="logout" onClick={this.handleLogout}>Logout</Button>
             		</Toolbar>

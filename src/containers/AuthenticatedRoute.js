@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import {AuthenticatedServiceInstance} from '../services/AuthenticationService';
-
 export const AuthenticatedRoute = ({component: Component, ...rest}) => (
     <Route 
     {...rest} 

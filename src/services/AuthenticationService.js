@@ -16,21 +16,21 @@ class AuthenticationService {
             "name" : "Patrick Sprows",
             "organisationId" : "citi",
             "username" : "citi",
-            "password" : "bank",
+            "password" : "citi",
             "role" : "bank"
         },{
             "id" : "3",
             "name" : "Adam McLory",
             "organisationId" : "wells",
             "username" : "wells",
-            "password" : "fargo",
+            "password" : "wells",
             "role" : "bank"
         },{
             "id" : "4",
             "name" : "Billy Brown",
             "organisationId" : "jp",
             "username" : "jp",
-            "password" : "morgan",
+            "password" : "jp",
             "role" : "bank"
         }
       ];

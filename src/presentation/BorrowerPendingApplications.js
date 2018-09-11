@@ -34,7 +34,7 @@ function PendingApplications(props) {
         <Table className={classes.table}>
         <TableHead>
           <TableRow id="headRow">
-            <TableCell >Loan</TableCell>
+            <TableCell >Requistion</TableCell>
             <TableCell numeric>Action</TableCell>
           </TableRow>
         </TableHead>
@@ -43,7 +43,7 @@ function PendingApplications(props) {
             return (
               <TableRow className="loanRow" key={props.loanList[n].RequisitionNo}>
                 <TableCell padding="none" classes={{paddingNone: classes.paddingNone}}  scope="row">
-                  {`Loan Id ${props.loanList[n].RequisitionNo}`}
+                  {`${props.loanList[n].RequisitionNo}`}
                 </TableCell>
                 <TableCell  classes={{paddingNone: classes.paddingNone}}  numeric>
                 <NavLink id="view" to={`/loan/${props.loanList[n].RequisitionNo}`}>View</NavLink>
@@ -53,7 +53,7 @@ function PendingApplications(props) {
           }) : <TableRow>
           
           
-          <TableCell > <h4> No Pending Loans Available </h4></TableCell>
+          <TableCell > <h4> No Pending Requisitons Available </h4></TableCell>
           </TableRow>}
         </TableBody>
       </Table>
