@@ -176,7 +176,10 @@ body {
   min-height: 50px;
 }
 #syndicateForm {
-  /* margin-top: 40px; */
+  
+}
+#syndicateForms {
+  box-shadow: none;
 }
 #syndiWell {
   padding: 10px 0px 10px 6px;
@@ -196,7 +199,7 @@ body {
   background-color: #B1BEB8;
 }
 #addtranch {
-  background-color: #828f94;
+  background-color: #119ed4;
 }
 .wellText {
   font-family: -WEBKIT-PICTOGRAPH;
@@ -205,4 +208,7 @@ body {
 }
 #logout {
   float:right
+}
+#noloan {
+  text-align: center
 }

@@ -24,7 +24,7 @@ export default class LoanDetails extends React.Component {
 	}
 	componentDidMount() {
 		const { match: { params } } = this.props;
-		axios.get(`http://delvmplwindpark00:8080/requisition/${params.id}`)
+		axios.get(`/requisition/${params.id}`)
 			.then(({ data: loanDetail }) => {
 			  console.log('user', loanDetail);
 				this.setState({ loanDetail: loanDetail });
@@ -48,7 +48,7 @@ export default class LoanDetails extends React.Component {
 		};
 		
 
-	    axios.put(`http://delvmplwindpark00:8080/finalizeRequisition`, postObj )
+	    axios.put(`/finalizeRequisition`, postObj )
 	      .then(res => {
 			  this.setState({redirect: true})
 	        console.log(res);
@@ -64,7 +64,7 @@ export default class LoanDetails extends React.Component {
 		  
 		};
 		
-		axios.post(`http://delvmplwindpark00:8080/finalizeRequisition`, postObj )
+		axios.post(`/finalizeRequisition`, postObj )
 		.then(res => {
 		this.setState({redirect: true})
 			console.log(res);

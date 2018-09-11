@@ -19,7 +19,14 @@ const styles = theme => ({
    overflowX: 'auto',
  }, table: {
    minWidth: 100,
- },
+ }, tablehead: {
+  height: theme.spacing.unit * 5
+},
+tablecell: {
+  padding: '1px 56px 1px 24px',
+  fontWeight: 500,
+  fontSize: theme.spacing.unit * 1.7
+},
  paddingNone: {
    padding: '1px 56px 1px 24px',
  }
@@ -32,19 +39,19 @@ function BorrowerAcceptedLoans(props) {
       <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
-          <TableRow>
-            <TableCell>Loan Id</TableCell>
-            <TableCell >Borrower First Name</TableCell>
-            <TableCell >Borrower Second Name</TableCell>
-            <TableCell >Loan Amount</TableCell>
-            <TableCell >Deadline</TableCell>
-            <TableCell >Interest Rate</TableCell>
+          <TableRow className={classes.tablehead}>
+            <TableCell className={classes.tablecell}>Loan Id</TableCell>
+            <TableCell className={classes.tablecell}>Borrower First Name</TableCell>
+            <TableCell className={classes.tablecell}>Borrower Second Name</TableCell>
+            <TableCell className={classes.tablecell}>Loan Amount</TableCell>
+            <TableCell className={classes.tablecell}>Deadline</TableCell>
+            <TableCell className={classes.tablecell}>Interest Rate</TableCell>
             <TableCell ></TableCell>
             <TableCell ></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.keys(props.loanList).map(row => {
+          {(props.loanList.length > 0) ? Object.keys(props.loanList).map(row => {
             return (
               <TableRow key={props.loanList[row].RequisitionNo}>
                 <TableCell component="th" scope="row">
@@ -60,7 +67,12 @@ function BorrowerAcceptedLoans(props) {
                 <TableCell numeric><Button>Generate Information Memo</Button></TableCell>
               </TableRow>
             );
-          })}
+          }): <TableRow>
+          <TableCell ></TableCell>
+          
+          <TableCell ></TableCell>
+          <TableCell > <h4 id="noloan"> No Loans to Display </h4></TableCell>
+          </TableRow>}
         </TableBody>
       </Table>
     </Paper>

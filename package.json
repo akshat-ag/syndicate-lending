@@ -23,5 +23,6 @@
   "devDependencies": {
     "@material-ui/icons": "^2.0.1",
     "nodemon": "^1.18.4"
-  }
+  },
+  "proxy": "http://delvmplwindpark00:8080"
 }

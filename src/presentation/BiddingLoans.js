@@ -21,7 +21,13 @@ const styles = theme => ({
    overflowX: 'auto',
  }, table: {
    minWidth: 100,
- },
+ },tablehead: {
+  height: theme.spacing.unit * 5
+},tablecell: {
+    padding: '1px 28px 1px 19px',
+    fontWeight: 500,
+    fontSize: theme.spacing.unit * 1.7
+},
  paddingNone: {
    padding: '1px 56px 1px 24px',
  }
@@ -41,15 +47,15 @@ function BiddingLoans(props) {
      
       <Table className={classes.table}>
         <TableHead>
-          <TableRow>
-            <TableCell>Loan Id</TableCell>
-            <TableCell >Borrower First Name</TableCell>
-            <TableCell >Borrower Second Name</TableCell>
-            <TableCell >Loan Amount</TableCell>
-            <TableCell >Deadline</TableCell>
-            <TableCell >Interest Rate</TableCell>
-            <TableCell ></TableCell>
-            <TableCell ></TableCell>
+          <TableRow className={classes.tablehead}>
+            <TableCell className={classes.tablecell}>Loan Id</TableCell>
+            <TableCell className={classes.tablecell}>Borrower First Name</TableCell>
+            <TableCell className={classes.tablecell}>Borrower Second Name</TableCell>
+            <TableCell className={classes.tablecell}>Loan Amount</TableCell>
+            <TableCell className={classes.tablecell}>Deadline</TableCell>
+            <TableCell className={classes.tablecell}>Interest Rate</TableCell>
+            <TableCell className={classes.tablecell}></TableCell>
+            <TableCell className={classes.tablecell}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -79,7 +85,12 @@ function BiddingLoans(props) {
                 <TableCell numeric><Button variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
               </TableRow>
             );
-          }) : 'No Bidding Loans to display'}
+          }) : <TableRow>
+          <TableCell ></TableCell>
+          
+          <TableCell ></TableCell>
+          <TableCell > <h4 id="noloan"> No Bidding Loans to Display </h4></TableCell>
+          </TableRow>}
         </TableBody>
       </Table>
      

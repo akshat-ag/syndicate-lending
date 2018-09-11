@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import Grid from "@material-ui/core/Grid";
 class LeadArrangerDashboard extends Component {
     constructor(props) {
         super(props);
@@ -14,7 +15,8 @@ class LeadArrangerDashboard extends Component {
     	this.state = {
             quotedLoans: [],
             acceptedLoans: [],
-            biddingLoans: []
+            biddingLoans: [],
+            loansResolved: false
     	};
         this.myCallback = this.myCallback.bind(this);
         this.handleAccept = this.handleAccept.bind(this);
@@ -25,11 +27,12 @@ class LeadArrangerDashboard extends Component {
     componentDidMount() {
         const arrangerName = this.authenticedServiceInstance.getUserInfo().orgId;
         this.setState({arrangerName: arrangerName});
-        let loans =  axios.get('http://delvmplwindpark00:8080/requisitions/la/' + arrangerName)
+        let loans =  axios.get('/requisitions/la/' + arrangerName)
         .then(({ data: loanList }) => {
          // console.log('user', loanList);
         let approvedLoans = [];
         let biddingLoans = [];
+        this.setState({loansResolved: true});
         for( let i = 0, max = loanList.length; i < max ; i++ ){
             if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
                 approvedLoans.push(loanList[i]);
@@ -61,7 +64,7 @@ class LeadArrangerDashboard extends Component {
         
         postObj.status = 'Rate Quoted';
         
-          axios.put(`http://delvmplwindpark00:8080/updateRequisition/`,  postObj )
+          axios.put(`/updateRequisition/`,  postObj )
             .then(res => {
                 this.setState({redirect: true})
               console.log(res);
@@ -123,7 +126,7 @@ class LeadArrangerDashboard extends Component {
    		if (this.state.redirectToTranches && this.state.loanToRedirect) {
     		return <Redirect push to={`/syndicate/${this.state.loanToRedirect}`}/>;
   		}
-        if(1) {
+        if(this.state.loansResolved) {
             return (
                 <div id="leadArrangerDashboard">
                              
@@ -133,7 +136,12 @@ class LeadArrangerDashboard extends Component {
             );
         }
         else {
-            return <div><CircularProgress  size={50} thickness={7} />Loading....</div>
+            return  <Grid container  id="loader" justify="center" alignItems="center">
+            <Grid container item xs={12} justify="center">
+            <CircularProgress  size={50} thickness={4} />
+            </Grid>
+            
+            </Grid>
         }
     }
 }

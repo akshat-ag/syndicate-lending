@@ -54,7 +54,7 @@ function TranchesOverview(props) {
     <div >
       <h3> Tranches Overview</h3>
       
-      {(props.trancheList.length) ? 
+      
       <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
@@ -68,7 +68,8 @@ function TranchesOverview(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.keys(props.trancheList).map(row => {
+        {(props.trancheList.length) ? 
+          Object.keys(props.trancheList).map(row => {
             return (
               <TableRow key={props.trancheList[row].StartDate}>
                 <TableCell component="th" scope="row">
@@ -81,16 +82,18 @@ function TranchesOverview(props) {
                 <TableCell numeric><button>View</button></TableCell>
               </TableRow>
             );
-          })}
-          {emptyRows > 0 && (
-                <TableRow style={{ height: 48 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
+          })
+          : <TableRow>
+          <TableCell ></TableCell>
+          
+          <TableCell ></TableCell>
+          <TableCell > <h4 id="noloan"> No Tranche added yet. </h4></TableCell>
+          </TableRow>}
+           
         </TableBody>
         
       </Table>
-    </Paper> : <h4>No Tranche added yet. </h4>}
+    </Paper>
     </div>)
 }
 

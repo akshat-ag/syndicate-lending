@@ -29,7 +29,7 @@ function PendingApplications(props) {
   console.log(classes);
     return (
       <div >
-        {(props.loanList.length) ? 
+        
         <Paper className={classes.root}>
         <Table className={classes.table}>
         <TableHead>
@@ -39,7 +39,7 @@ function PendingApplications(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.keys(props.loanList).map(n => {
+          {(props.loanList.length) ?  Object.keys(props.loanList).map(n => {
             return (
               <TableRow className="loanRow" key={props.loanList[n].RequisitionNo}>
                 <TableCell padding="none" classes={{paddingNone: classes.paddingNone}}  scope="row">
@@ -50,10 +50,14 @@ function PendingApplications(props) {
                 </TableCell>
               </TableRow>
             );
-          })}
+          }) : <TableRow>
+          
+          
+          <TableCell > <h4> No Pending Loans Available </h4></TableCell>
+          </TableRow>}
         </TableBody>
       </Table>
-      </Paper>  : <h4>No Pending Loans Available</h4>}
+      </Paper>
       </div>
     );
   

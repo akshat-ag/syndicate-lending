@@ -22,7 +22,7 @@ class Dashboard extends Component {
     componentDidMount() {
         let user = this.authenticedServiceInstance.getUserInfo();
         let role = user.orgId;
-        axios.get(`http://delvmplwindpark00:8080/requisitions/` + role)
+        axios.get(`/requisitions/` + role)
             .then(({ data: loanList }) => {
              // console.log('user', loanList);
             let approvedLoans = [];

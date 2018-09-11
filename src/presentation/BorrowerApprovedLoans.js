@@ -14,12 +14,19 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 const styles = theme => ({
   root: {
-   width: '80%',
+   width: '90%',
    marginTop: theme.spacing.unit * 3,
    overflowX: 'auto',
  }, table: {
    minWidth: 100,
  },
+ tablehead: {
+   height: theme.spacing.unit * 5
+ },
+ tablecell: {
+  padding: '1px 28px 1px 19px',
+},
+
  paddingNone: {
    padding: '1px 56px 1px 24px',
  }
@@ -36,36 +43,41 @@ function ApprovedLoans(props) {
     <div className="root1">
       <h3> Approved Loans</h3>
       
-      {(props.loanList.length) ? 
+      
       <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
-          <TableRow>
-            <TableCell>Loan Id</TableCell>
-            <TableCell numeric>Borrower First Name</TableCell>
-            <TableCell numeric>Borrower Second Name</TableCell>
-            <TableCell numeric>Loan Sanctioned</TableCell>
-            <TableCell numeric>Loan Funded</TableCell>
-            <TableCell numeric>Deadline</TableCell>
-            <TableCell numeric>Interest Rate</TableCell>
+          <TableRow className={classes.tablehead}>
+            <TableCell className={classes.tablecell}>Loan Id</TableCell>
+            <TableCell className={classes.tablecell}>Borrower First Name</TableCell>
+            <TableCell className={classes.tablecell}>Borrower Second Name</TableCell>
+            <TableCell className={classes.tablecell}>Loan Sanctioned</TableCell>
+            <TableCell className={classes.tablecell}>Loan Funded</TableCell>
+            <TableCell className={classes.tablecell}>Deadline</TableCell>
+            <TableCell className={classes.tablecell}>Interest Rate</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.keys(props.loanList).map(row => {
+          {(props.loanList.length) ? Object.keys(props.loanList).map(row => {
             return (
               <TableRow key={props.loanList[row].RequisitionNo}>
                 <TableCell component="th" scope="row">
                   {props.loanList[row].RequisitionNo}
                 </TableCell>
-                <TableCell numeric>{props.loanList[row].FirstName}</TableCell>
-                <TableCell numeric>{props.loanList[row].LastName}</TableCell>
-                <TableCell numeric>{props.loanList[row].RequisitionAmount}</TableCell>
-                <TableCell numeric>{props.loanList[row].RequisitionAmount}</TableCell>
-                <TableCell numeric>{props.loanList[row].EndDate}</TableCell>
-                <TableCell numeric>{props.loanList[row].Rate}</TableCell>
+                <TableCell >{props.loanList[row].FirstName}</TableCell>
+                <TableCell >{props.loanList[row].LastName}</TableCell>
+                <TableCell >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell >{props.loanList[row].EndDate}</TableCell>
+                <TableCell >{props.loanList[row].Rate}</TableCell>
               </TableRow>
             );
-          })}
+          }) : <TableRow>
+          <TableCell ></TableCell>
+          
+          <TableCell ></TableCell>
+          <TableCell > <h4 id="noloan"> No Approved Loans Available  </h4></TableCell>
+          </TableRow>}
           
         </TableBody>
         <TableFooter>
@@ -81,7 +93,7 @@ function ApprovedLoans(props) {
               </TableRow>
             </TableFooter>
       </Table>
-    </Paper> : <h4>No Approved Loans Available </h4>}
+    </Paper> 
     </div>)
 }
 

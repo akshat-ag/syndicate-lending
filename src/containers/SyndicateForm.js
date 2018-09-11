@@ -40,7 +40,7 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
         paddingLeft: theme.spacing.unit * 1.5,
-        paddingRight: theme.spacing.unit * 1.5,
+        paddingRight: theme.spacing.unit * 1.5
     },
     borrwerLine: {
         marginTop: theme.spacing.unit * 1,
@@ -74,7 +74,7 @@ class SyndicateForm extends React.Component {
     }
     componentDidMount() {
         const { match: { params } } = this.props;
-        axios.get(`http://delvmplwindpark00:8080/requisition/${params.id}`)
+        axios.get(`/requisition/${params.id}`)
 			.then(({ data: loanDetail }) => {
 			    this.setState({ loanDetail: loanDetail });
 				this.setState({ banksList: loanDetail.RoI });
@@ -169,7 +169,7 @@ class SyndicateForm extends React.Component {
             postObj.Tranches[i].Drawdowns = drawdowns;
         }
         
-        axios.post(`http://delvmplwindpark00:8080/loan`, postObj )
+        axios.post(`/loan`, postObj )
         .then(res => {
             this.setState({redirect: true})
           console.log(res);
@@ -191,7 +191,7 @@ class SyndicateForm extends React.Component {
                 <div id="syndicateForm" className={classes.layout}>
                     <Grid container>
                         <Grid item xs={12} sm={12} md={12}>
-                            <Paper className={classes.badaWell}>
+                            <Paper className={classes.badaWell} id="syndicateForms">
                                 <Grid container>
                                     <Grid item xs={12}>
                                 <Paper className={classes.loanSummaryWell} id="syndiWell">
