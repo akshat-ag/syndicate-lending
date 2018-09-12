@@ -9,7 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
-
+import _ from 'lodash';
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -64,6 +64,10 @@ class MultipleSelect extends React.Component {
     console.log(this.state.name);
     
   };
+  getLabel = value => {
+  let name =_.find(names,{ value : value });
+  return name.name;
+  }
     render() {
     const { classes, theme } = this.props;
 
@@ -80,7 +84,7 @@ class MultipleSelect extends React.Component {
             renderValue={selected => (
               <div className={classes.chips}>
                 {selected.map(value => (
-                  <Chip key={value} label={value} className={classes.chip} />
+                  <Chip key={value} label={this.getLabel(value)} className={classes.chip} />
                 ))}
               </div>
             )}

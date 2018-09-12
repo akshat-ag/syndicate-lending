@@ -404,6 +404,15 @@ class Checkout extends Component {
         throw new Error('Unknown step');
     }
   }
+  getTrancheNo = (activeStep, steps) => {
+    let a = '';
+    if(activeStep === steps.length ) {
+      a = "Tranche #" + (this.props.counter );
+    } else {
+      a = "Tranche #" + (this.props.counter + 1);
+    }
+    return a;
+  }
   render() {
     const { classes } = this.props;
     const { activeStep } = this.state;
@@ -416,7 +425,7 @@ class Checkout extends Component {
         
           <Paper className={classes.paper}>
             <Typography variant="title" align="center">
-              Add Tranche
+           {this.getTrancheNo(activeStep, steps)} 
             </Typography>
             <Stepper activeStep={activeStep} className={classes.stepper} >
               {steps.map(label => (

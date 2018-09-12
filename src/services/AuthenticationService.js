@@ -10,6 +10,7 @@ class AuthenticationService {
             "organisationId" : "Reliance",
             "username" : "reliance",
             "password" : "reliance",
+            "orgName" : "Reliance",
             "role" : "borrower"
         },{
             "id" : "2",
@@ -17,6 +18,7 @@ class AuthenticationService {
             "organisationId" : "citi",
             "username" : "citi",
             "password" : "citi",
+            "orgName" : "CitiBank",
             "role" : "bank"
         },{
             "id" : "3",
@@ -24,6 +26,7 @@ class AuthenticationService {
             "organisationId" : "wells",
             "username" : "wells",
             "password" : "wells",
+            "orgName" : "Wells Fargo",
             "role" : "bank"
         },{
             "id" : "4",
@@ -31,6 +34,7 @@ class AuthenticationService {
             "organisationId" : "jp",
             "username" : "jp",
             "password" : "jp",
+            "orgName" : "JP Morgan",
             "role" : "bank"
         }
       ];
@@ -47,6 +51,7 @@ class AuthenticationService {
                     username : user.username,
                     name : user.name,
                     orgId : user.organisationId,
+                    orgName: user.orgName,
                     role : user.role
                 } //load matched user
             }

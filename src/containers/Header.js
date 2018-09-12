@@ -7,10 +7,25 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography'
 import {AuthenticatedServiceInstance} from '../services/AuthenticationService';
 import {NavLink} from 'react-router-dom'
-export default class Header extends React.Component {
+import { withStyles } from '@material-ui/core/styles';
+import ProfilePopper from '../presentation/ProfilePopper';
+const styles = theme => ({
+	tabs: {
+		flex: 1
+	}
+ });
+class Header extends React.Component {
 	constructor(props) {
 		super(props);
 		this.authenticedServiceInstance = AuthenticatedServiceInstance;
+		this.state = {
+			user : {},
+			open: false
+		}
+	}
+	componentDidMount() {
+		let user =this.authenticedServiceInstance.getUserInfo();
+		this.setState({user});
 	}
 	handleLogout = () => {
 		this.authenticedServiceInstance.toggleLogin();
@@ -20,7 +35,18 @@ export default class Header extends React.Component {
 		let role = this.authenticedServiceInstance.getUserRole();
 		return role;
 	}
+	handleToggle = () => {
+		this.setState(state => ({ open: !state.open }));
+	}
+	handleClose = (event, anchorEl) => {
+		if (anchorEl.contains(event.target)) {
+		  return;
+		}
+	
+		this.setState({ open: false });
+	  };
 	render() {
+		const { classes } = this.props;
 		return (
 			 <div >
         		<AppBar position="static" id="headerr">
@@ -28,15 +54,23 @@ export default class Header extends React.Component {
                 		<Typography variant="title" color="inherit">
                			Syndicate Loans Platform
                			</Typography>
-               			<Tabs >
+               			<Tabs className={classes.tabs}>
 			            <Tab label="Home"  to='/' component={NavLink}/>
 						{(this.checkUser() === "borrower") ?
 			            <Tab label="Initiate Application" to='/application' component={NavLink}/> : null}
 		          	</Tabs>
-					  <Button id="logout" onClick={this.handleLogout}>Logout</Button>
+
+					  <div  id="logout">
+					 <ProfilePopper handleToggle = {this.handleToggle}
+					 					  handleClose = {this.handleClose}
+										  handleLogout = {this.handleLogout}
+										  open = {this.state.open} 
+										  user = {this.state.user}/>
+					  </div>
             		</Toolbar>
             		
         		</AppBar>
         </div>);
 	}
 }
+export default withStyles(styles)(Header);
