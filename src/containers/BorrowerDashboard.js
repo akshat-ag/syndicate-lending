@@ -4,6 +4,7 @@ import PendingApplications from '../presentation/BorrowerPendingApplications';
 import ApprovedLoans from '../presentation/BorrowerApprovedLoans';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import CustomizedTabs from '../presentation/RequisitionTabs';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from "@material-ui/core/Grid";
 class Dashboard extends Component {
@@ -13,7 +14,8 @@ class Dashboard extends Component {
     	this.state = {
             approvedLoansRowsPerPage: 5,
             approvedLoansPage: 0,
-            approvedLoansView: []
+            approvedLoansView: [],
+            tabIndex: 0
     	};
         this.myCallback = this.myCallback.bind(this);
         this.handleChangePage = this.handleChangePage.bind(this);
@@ -61,6 +63,27 @@ class Dashboard extends Component {
         this.setState({ approvedLoansRowsPerPage: rows, approvedLoansPage: 0 });
         //this.setApprovedViewLoans(rows);
     };
+    getTabData = () =>  {
+        const biddingHeader = "Loan(s) for Bidding";
+        const accepteddHeader = "Borrower Accepted Loans";
+        switch(this.state.tabIndex) {
+            case 0:
+              return   <PendingApplications loanList={this.state.pendingLoans}
+                  redirectToLoan={this.myCallback} />;
+              case 1: 
+                return   <ApprovedLoans loanList={this.setApprovedViewLoans()}
+                totalLoans={this.state.approvedLoans.length}
+                rowsPerPage={this.state.approvedLoansRowsPerPage}
+                page={this.state.approvedLoansPage}
+                handleChangePage={this.handleChangePage}
+                handleChangeRowsPerPage={this.handleChangeRowsPerPage}/>;
+            default: 
+                throw new Error('Unknown step');
+        }
+    };
+    handleChange = (event, value) => {
+        this.setState({ tabIndex: value });
+    };
     render() {
         console.log(this.state);
    		if (this.state.redirect && this.state.loanToRedirect) {
@@ -70,18 +93,21 @@ class Dashboard extends Component {
             return (
                 <div id="borrowerDashboard">
                     <Grid container>
-                        <Grid item xs={12} sm={10} md={10}>
-    			<h3> Applications Pending for Lead Arranger Selection </h3>  
-                <PendingApplications loanList={this.state.pendingLoans}
-                  redirectToLoan={this.myCallback} />
-                 </Grid>
-                 <Grid xs={12} sm={10} md={10}>
-                <ApprovedLoans loanList={this.setApprovedViewLoans()}
-                totalLoans={this.state.approvedLoans.length}
-                rowsPerPage={this.state.approvedLoansRowsPerPage}
-                page={this.state.approvedLoansPage}
-                handleChangePage={this.handleChangePage}
-                handleChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+                        <Grid item xs={12} sm={11} md={11}>
+                        <div id="requisitionsBank">
+                    <h4 id="requis"> Requisitions </h4>
+                    <CustomizedTabs handleChange={this.handleChange}
+                                    tabIndex={this.state.tabIndex}/>
+                    {this.getTabData()}
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={11} md={11}>
+                        <div id="requisitionsBank">
+                    <h4 id="requis"> Requisitions </h4>
+                    <CustomizedTabs handleChange={this.handleChange}
+                                    tabIndex={this.state.tabIndex}/>
+                    {this.getTabData()}
+                    </div>
                 </Grid>
                 </Grid>
                 </div>

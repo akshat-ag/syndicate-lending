@@ -15,7 +15,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 const styles = theme => ({
   root: {
    width: '90%',
-   marginTop: theme.spacing.unit * 3,
+   marginTop: theme.spacing.unit * 1.7,
    overflowX: 'auto',
  }, table: {
    minWidth: 100,
@@ -26,7 +26,16 @@ const styles = theme => ({
  tablecell: {
   padding: '1px 28px 1px 19px',
 },
-
+tablerow: {
+  height: theme.spacing.unit * 3.9
+},
+tableToolbar: {
+  height: theme.spacing.unit * 3.5,
+  minHeight: theme.spacing.unit * 3.5,
+},
+tableNormalcell: {
+  padding: '1px 28px 1px 19px',
+},
  paddingNone: {
    padding: '1px 56px 1px 24px',
  }
@@ -40,8 +49,8 @@ function ApprovedLoans(props) {
   const {classes} = props;
   const emptyRows = props.rowsPerPage - Math.min(props.rowsPerPage, props.totalLoans - props.page * props.rowsPerPage);
   return (
-    <div className="root1">
-      <h3> Approved Requistions</h3>
+    <div >
+     
       
       
       <Paper className={classes.root}>
@@ -49,27 +58,27 @@ function ApprovedLoans(props) {
         <TableHead>
           <TableRow className={classes.tablehead}>
             <TableCell className={classes.tablecell}>Requsition Id</TableCell>
-            <TableCell className={classes.tablecell}>Borrower First Name</TableCell>
-            <TableCell className={classes.tablecell}>Borrower Second Name</TableCell>
-            <TableCell className={classes.tablecell}>Loan Sanctioned</TableCell>
-            <TableCell className={classes.tablecell}>Loan Funded</TableCell>
+            <TableCell className={classes.tablecell}>Borrower </TableCell>
+            <TableCell className={classes.tablecell}>Requsition Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
+            <TableCell className={classes.tablecell}>Status</TableCell>
+            <TableCell className={classes.tablecell}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {(props.loanList.length) ? Object.keys(props.loanList).map(row => {
             return (
-              <TableRow key={props.loanList[row].RequisitionNo}>
-                <TableCell component="th" scope="row">
+              <TableRow className={classes.tablerow} key={props.loanList[row].RequisitionNo}>
+                <TableCell className={classes.tableNormalcell} component="th" scope="row">
                   {props.loanList[row].RequisitionNo}
                 </TableCell>
-                <TableCell >{props.loanList[row].FirstName}</TableCell>
-                <TableCell >{props.loanList[row].LastName}</TableCell>
-                <TableCell >{props.loanList[row].RequisitionAmount}</TableCell>
-                <TableCell >{props.loanList[row].RequisitionAmount}</TableCell>
-                <TableCell >{props.loanList[row].EndDate}</TableCell>
-                <TableCell >{props.loanList[row].Rate}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].Rate}</TableCell>
+                <TableCell className={classes.tableNormalcell} >Memo Signed</TableCell>
+                <TableCell className={classes.tableNormalcell} >Memo Signed</TableCell>
               </TableRow>
             );
           }) : <TableRow>
@@ -81,8 +90,9 @@ function ApprovedLoans(props) {
           
         </TableBody>
         <TableFooter>
-              <TableRow>
+              <TableRow className={classes.tablerow}>
                 <TablePagination
+                  classes={{toolbar: classes.tableToolbar}}
                   colSpan={3}
                   count={props.totalLoans}
                   rowsPerPage={props.rowsPerPage}

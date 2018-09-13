@@ -12,11 +12,23 @@ import {NavLink} from 'react-router-dom';
 const styles = theme => ({
    root: {
     width: '36%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 1.7,
     overflowX: 'auto',
   }, table: {
     minWidth: 100,
-  },
+  },tablehead: {
+   height: theme.spacing.unit * 4
+ },tablecell: {
+     padding: '1px 28px 1px 19px',
+     fontWeight: 500,
+     fontSize: theme.spacing.unit * 1.7
+ },
+ tablerow: {
+   height: theme.spacing.unit * 3.95
+ },
+ tableNormalcell: {
+   padding: '1px 28px 1px 19px',
+ },
   paddingNone: {
     padding: '1px 56px 1px 24px',
   }
@@ -33,7 +45,7 @@ function PendingApplications(props) {
         <Paper className={classes.root}>
         <Table className={classes.table}>
         <TableHead>
-          <TableRow id="headRow">
+          <TableRow className={classes.tablehead}>
             <TableCell >Requistion</TableCell>
             <TableCell numeric>Action</TableCell>
           </TableRow>
@@ -41,7 +53,7 @@ function PendingApplications(props) {
         <TableBody>
           {(props.loanList.length) ?  Object.keys(props.loanList).map(n => {
             return (
-              <TableRow className="loanRow" key={props.loanList[n].RequisitionNo}>
+              <TableRow className={classes.tablerow} key={props.loanList[n].RequisitionNo}>
                 <TableCell padding="none" classes={{paddingNone: classes.paddingNone}}  scope="row">
                   {`${props.loanList[n].RequisitionNo}`}
                 </TableCell>

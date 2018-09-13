@@ -17,7 +17,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 const styles = theme => ({
   root: {
    width: '90%',
-   marginTop: theme.spacing.unit * 3,
+   marginTop: theme.spacing.unit * 1.2,
    overflowX: 'auto',
  }, table: {
    minWidth: 100,
@@ -27,6 +27,9 @@ const styles = theme => ({
     padding: '1px 28px 1px 19px',
     fontWeight: 500,
     fontSize: theme.spacing.unit * 1.7
+},
+tableNormalcell: {
+  padding: '1px 28px 1px 19px',
 },
  paddingNone: {
    padding: '1px 56px 1px 24px',
@@ -41,16 +44,16 @@ function BiddingLoans(props) {
     props.onAccept(postObj);
 };
   return (
-    <div className="root1">
-      <h3> {props.heading}</h3>
+    <div >
+      
       <Paper className={classes.root}>
      
       <Table className={classes.table}>
         <TableHead>
           <TableRow className={classes.tablehead}>
-            <TableCell className={classes.tablecell}>Loan Id</TableCell>
+            <TableCell className={classes.tablecell}>Requisition Id</TableCell>
             <TableCell className={classes.tablecell}>Borrower</TableCell>
-            <TableCell className={classes.tablecell}>Loan Amount</TableCell>
+            <TableCell className={classes.tablecell}>Requisition Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
             <TableCell className={classes.tablecell}></TableCell>
@@ -60,16 +63,16 @@ function BiddingLoans(props) {
         <TableBody>
           {(props.loanList.length > 0) ? Object.keys(props.loanList).map(row => {
             return (
-              <TableRow key={props.loanList[row].RequisitionNo}>
-                <TableCell component="th" scope="row">
+              <TableRow className={classes.tablehead} key={props.loanList[row].RequisitionNo}>
+                <TableCell className={classes.tableNormalcell} component="th" scope="row">
                   {props.loanList[row].RequisitionNo}
                 </TableCell>
-                <TableCell >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
                 
-                <TableCell >{props.loanList[row].RequisitionAmount}</TableCell>
-                <TableCell >{props.loanList[row].EndDate}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
 
-                <TableCell >
+                <TableCell className={classes.tableNormalcell}>
                 <TextField
                 required
                 id="simple-start-adornment"
@@ -80,8 +83,8 @@ function BiddingLoans(props) {
                 }}
               />
                 </TableCell>
-                <TableCell ><Button id="acceptBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button></TableCell>
-                <TableCell ><Button variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
+                <TableCell className={classes.tableNormalcell}><Button id="acceptBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button></TableCell>
+                <TableCell className={classes.tableNormalcell}><Button variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
               </TableRow>
             );
           }) : <TableRow>

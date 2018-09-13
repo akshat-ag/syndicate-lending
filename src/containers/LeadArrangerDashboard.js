@@ -3,6 +3,7 @@ import {AuthenticatedServiceInstance} from '../services/AuthenticationService';
 import PendingApplications from '../presentation/BorrowerPendingApplications';
 import BiddingLoans from '../presentation/BiddingLoans';
 import BorrowerAcceptedLoans from '../presentation/BorrowerAcceptedLoans';
+import CustomizedTabs from '../presentation/RequisitionTabs';
 import { Redirect } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
@@ -16,7 +17,8 @@ class LeadArrangerDashboard extends Component {
             quotedLoans: [],
             acceptedLoans: [],
             biddingLoans: [],
-            loansResolved: false
+            loansResolved: false,
+            tabIndex: 0
     	};
         this.myCallback = this.myCallback.bind(this);
         this.handleAccept = this.handleAccept.bind(this);
@@ -27,15 +29,17 @@ class LeadArrangerDashboard extends Component {
     componentDidMount() {
         const arrangerName = this.authenticedServiceInstance.getUserInfo().orgId;
         this.setState({arrangerName: arrangerName});
-        let loans =  axios.get('http://delvmplwindpark00:8080/requisitions/la/' + arrangerName)
+        let loans =  axios.get('/requisitions/la/' + arrangerName)
         .then(({ data: loanList }) => {
          // console.log('user', loanList);
         let approvedLoans = [];
         let biddingLoans = [];
+        let statusAddedRequisition= {};
         this.setState({loansResolved: true});
         for( let i = 0, max = loanList.length; i < max ; i++ ){
             if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
-                approvedLoans.push(loanList[i]);
+                statusAddedRequisition = this.sortStatus(loanList[i]);
+                approvedLoans.push(statusAddedRequisition);
             } else if(loanList[i].RequisitionStatus === "Pending"){
                 for(let j=0; j< loanList[i].RoI.length; j++) {
                     if(loanList[i].RoI[j].BankName === arrangerName && loanList[i].RoI[j].Status === "Pending") {
@@ -55,7 +59,26 @@ class LeadArrangerDashboard extends Component {
     	});
     }
     
-    
+    sortStatus = (loan) => {
+        // if(this.state.approvedLoans.length >0) {
+        //     const newItems = [...this.state.approvedLoans];
+        //     for(let i=0; i<this.state.approvedLoans.length; i++) {
+                if(!loan.MemoStatus.LeadArranger &&
+                    !loan.MemoStatus.Borrower) {
+                        loan.status = "Generate Memo";
+                } else if(loan.MemoStatus.LeadArranger &&
+                     !loan.MemoStatus.Borrower) {
+                        loan.status = "Borrower Confirmation Left";
+                } else {
+                    loan.status = "Memo Signed";
+                }
+            // }
+            // this.setState((prevState) => {
+            //     return {approvedLoans: newItems};
+            // });
+        // }
+        return loan;
+    }
     handleAccept(loanId){
         let postObj = this.state.quotedLoans.find(x => x.RequisitionNo === loanId);
         // if(postObjIndex === -1) {
@@ -119,9 +142,30 @@ class LeadArrangerDashboard extends Component {
     		loanToRedirect: loanId
     	});  
     }
-    render() {
+    getTabData = () =>  {
         const biddingHeader = "Loan(s) for Bidding";
         const accepteddHeader = "Borrower Accepted Loans";
+        switch(this.state.tabIndex) {
+            case 0:
+              return  <BiddingLoans heading={biddingHeader} 
+                                    loanList={this.state.biddingLoans} 
+                                    changeRate={this.handleRate} 
+                                    onAccept={this.handleAccept} 
+                                    onDecline={this.handleCancel}/>;
+              case 1: 
+                return   <BorrowerAcceptedLoans heading={accepteddHeader} 
+                                                loanList={this.state.acceptedLoans} 
+                                                showLoan={this.showLoanDetails} 
+                                                generateInfo={this.generateInfo}/>;
+            default: 
+                throw new Error('Unknown step');
+        }
+    };
+    handleChange = (event, value) => {
+        this.setState({ tabIndex: value });
+    };
+    render() {
+       
         console.log(this.state);
    		if (this.state.redirectToTranches && this.state.loanToRedirect) {
     		return <Redirect push to={`/syndicate/${this.state.loanToRedirect}`}/>;
@@ -129,9 +173,16 @@ class LeadArrangerDashboard extends Component {
         if(this.state.loansResolved) {
             return (
                 <div id="leadArrangerDashboard">
-                             
-                  <BiddingLoans heading={biddingHeader} loanList={this.state.biddingLoans} changeRate={this.handleRate} onAccept={this.handleAccept} onDecline={this.handleCancel}/>
-                  <BorrowerAcceptedLoans heading={accepteddHeader} loanList={this.state.acceptedLoans} showLoan={this.showLoanDetails} generateInfo={this.generateInfo}/>
+                    <div id="requisitionsBank">
+                    <h4 id="requis"> Requisitions </h4>
+                    <CustomizedTabs handleChange={this.handleChange}
+                                    tabIndex={this.state.tabIndex}/>
+                    {this.getTabData()}
+                    </div>
+                    <div id="loansBank">
+                    <h4 id="requis"> Loans </h4>
+                    
+                    </div>
                 </div>
             );
         }
