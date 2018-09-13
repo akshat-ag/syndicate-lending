@@ -103,10 +103,7 @@ class Dashboard extends Component {
                 </Grid>
                 <Grid item xs={12} sm={11} md={11}>
                         <div id="requisitionsBank">
-                    <h4 id="requis"> Requisitions </h4>
-                    <CustomizedTabs handleChange={this.handleChange}
-                                    tabIndex={this.state.tabIndex}/>
-                    {this.getTabData()}
+                    <h4 id="requis"> Loans </h4>
                     </div>
                 </Grid>
                 </Grid>

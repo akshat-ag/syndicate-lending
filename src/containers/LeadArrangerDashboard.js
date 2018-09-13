@@ -29,7 +29,7 @@ class LeadArrangerDashboard extends Component {
     componentDidMount() {
         const arrangerName = this.authenticedServiceInstance.getUserInfo().orgId;
         this.setState({arrangerName: arrangerName});
-        let loans =  axios.get('/requisitions/la/' + arrangerName)
+        let loans =  axios.get('http://delvmplwindpark00:8080/requisitions/la/' + arrangerName)
         .then(({ data: loanList }) => {
          // console.log('user', loanList);
         let approvedLoans = [];
@@ -38,8 +38,8 @@ class LeadArrangerDashboard extends Component {
         this.setState({loansResolved: true});
         for( let i = 0, max = loanList.length; i < max ; i++ ){
             if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
-                statusAddedRequisition = this.sortStatus(loanList[i]);
-                approvedLoans.push(statusAddedRequisition);
+                //statusAddedRequisition = this.sortStatus(loanList[i]);
+                approvedLoans.push(loanList[i]);
             } else if(loanList[i].RequisitionStatus === "Pending"){
                 for(let j=0; j< loanList[i].RoI.length; j++) {
                     if(loanList[i].RoI[j].BankName === arrangerName && loanList[i].RoI[j].Status === "Pending") {
