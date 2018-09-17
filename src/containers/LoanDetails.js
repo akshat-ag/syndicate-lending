@@ -23,8 +23,8 @@ export default class LoanDetails extends React.Component {
 		}
 	}
 	componentDidMount() {
-		const { match: { params } } = this.props;
-		axios.get(`http://delvmplwindpark00:8080/requisition/${params.id}`)
+		const { loanNo } = this.props;
+		axios.get(`http://delvmplwindpark00:8080/requisition/${loanNo}`)
 			.then(({ data: loanDetail }) => {
 			  console.log('user', loanDetail);
 				this.setState({ loanDetail: loanDetail });
@@ -40,9 +40,9 @@ export default class LoanDetails extends React.Component {
 	}
 	handleSubmit = (bankName) => {
 	   // event.preventDefault();
-	   const { match: { params } } = this.props;
+	   const { loanNo} = this.props;
 	    const postObj = {
-			RequisitionNo: params.id,
+			RequisitionNo: loanNo,
 			BankName: bankName,
 			status: "Approved"
 		};
@@ -53,13 +53,13 @@ export default class LoanDetails extends React.Component {
 			  this.setState({redirect: true})
 	        console.log(res);
 			console.log(res.data);
-			NotificationManager.success('Success message', 'Requisition Confirmed');
+			NotificationManager.success('Success message', 'Lead Arranger Selected');
 	      });
 	}
 	declineAll = () => {
-		const { match: { params } } = this.props;
+		const { loanNo } = this.props;
 		const postObj = {
-			RequisitionNo: params.id,
+			RequisitionNo: loanNo,
 		  declineAll: true,
 		  
 		};

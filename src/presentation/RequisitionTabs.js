@@ -9,7 +9,7 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    width: '90%',
+    width: '100%',
   },
   tabsRoot: {
     borderBottom: '1px solid #e8e8e8',
@@ -72,7 +72,11 @@ function CustomizedTabs(props) {
             classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
             label="Approved"
           />
-        
+          <Tab
+            disableRipple
+            classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+            label="Syndicates"
+          />
         </Tabs>
     </div>
     );

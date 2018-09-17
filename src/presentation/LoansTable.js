@@ -14,8 +14,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 const styles = theme => ({
   root: {
-   width: '100%',
-   marginTop: theme.spacing.unit * 0.7,
+   width: '90%',
+   marginTop: theme.spacing.unit * 1.7,
    overflowX: 'auto',
  }, table: {
    minWidth: 100,
@@ -45,7 +45,7 @@ tableNormalcell: {
 //     <TableCell colSpan={6} />
 //   </TableRow>
 // )}
-function ApprovedLoans(props) {
+function SyndicateLoans(props) {
   const {classes} = props;
   const emptyRows = props.rowsPerPage - Math.min(props.rowsPerPage, props.totalLoans - props.page * props.rowsPerPage);
   return (
@@ -57,39 +57,33 @@ function ApprovedLoans(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow className={classes.tablehead}>
-            <TableCell className={classes.tablecell}>Requsition Id</TableCell>
+            <TableCell className={classes.tablecell}>Loan Id</TableCell>
             <TableCell className={classes.tablecell}>Borrower </TableCell>
-            <TableCell className={classes.tablecell}>Requsition Amount</TableCell>
+            <TableCell className={classes.tablecell}>Loan Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
             <TableCell className={classes.tablecell}>Status</TableCell>
-            <TableCell className={classes.tablecell}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {(props.loanList.length) ? Object.keys(props.loanList).map(row => {
             return (
-              <TableRow className={classes.tablerow} key={props.loanList[row].RequisitionNo}>
+              <TableRow className={classes.tablerow} key={props.loanList[row].LoanNo}>
                 <TableCell className={classes.tableNormalcell} component="th" scope="row">
-                  {props.loanList[row].RequisitionNo}
+                  {props.loanList[row].LoanNo}
                 </TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].InstitutionName}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].LoanAmount}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].status}</TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].ActionNeeded ? <Button onClick={() => {props.handleAction(props.loanList[row].RequisitionNo, props.loanList[row].status);}}>{props.loanList[row].status}</Button> : "No Action Needed" }</TableCell>
-              </TableRow>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].LoanStatus}</TableCell>
+               </TableRow>
             );
           }) : <TableRow>
           <TableCell ></TableCell>
           
           <TableCell ></TableCell>
-          <TableCell > <h4 id="noloan"> No Approved Requistions Available  </h4></TableCell>
-          <TableCell ></TableCell>
-          <TableCell ></TableCell>
-          <TableCell ></TableCell>
-          <TableCell ></TableCell>
+          <TableCell > <h4 id="noloan"> No Syndicate Loans Available  </h4></TableCell>
           </TableRow>}
           
         </TableBody>
@@ -111,4 +105,4 @@ function ApprovedLoans(props) {
     </div>)
 }
 
-export default withStyles(styles)(ApprovedLoans);
+export default withStyles(styles)(SyndicateLoans);

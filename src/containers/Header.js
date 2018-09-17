@@ -8,10 +8,20 @@ import Typography from '@material-ui/core/Typography'
 import {AuthenticatedServiceInstance} from '../services/AuthenticationService';
 import {NavLink} from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
+import Badge from '@material-ui/core/Badge';
+import Notifications from '@material-ui/icons/Notifications';
 import ProfilePopper from '../presentation/ProfilePopper';
+import IconButton from '@material-ui/core/IconButton';
 const styles = theme => ({
 	tabs: {
 		flex: 1
+	},
+	notification: {
+
+	},
+	bellIcon: {
+		marginRight: theme.spacing.unit*2,
+		paddingTop: theme.spacing.unit*1,
 	}
  });
 class Header extends React.Component {
@@ -51,16 +61,22 @@ class Header extends React.Component {
 			 <div >
         		<AppBar position="static" id="headerr">
             		<Toolbar id="header">
-                		<Typography variant="title" color="inherit">
-               			Syndicate Loans Platform
+                		<Typography id="logoHeading" variant="headline" color="inherit">
+               			Syndicate Lending
                			</Typography>
                			<Tabs className={classes.tabs}>
 			            <Tab label="Home"  to='/' component={NavLink}/>
 						{(this.checkUser() === "borrower") ?
 			            <Tab label="Initiate Application" to='/application' component={NavLink}/> : null}
 		          	</Tabs>
-
+					  <IconButton aria-label="4 pending messages" className={classes.bellIcon}>
+					  <Badge className={classes.notification} badgeContent={4} color="primary">
+          				<Notifications />
+					</Badge>
+					</IconButton>
 					  <div  id="logout">
+					 
+					
 					 <ProfilePopper handleToggle = {this.handleToggle}
 					 					  handleClose = {this.handleClose}
 										  handleLogout = {this.handleLogout}
@@ -70,6 +86,7 @@ class Header extends React.Component {
             		</Toolbar>
             		
         		</AppBar>
+				
         </div>);
 	}
 }

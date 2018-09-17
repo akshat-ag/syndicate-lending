@@ -64,9 +64,9 @@ function BorrowerAcceptedLoans(props) {
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].RequisitionAmount}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
 
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].Rate}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].status}</TableCell>
-                <TableCell className={classes.tableNormalcell} ><Button onClick={() => {props.showLoan(props.loanList[row].RequisitionNo);}}>Form Syndicate</Button></TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].ActionNeeded ? <Button onClick={() => {props.handleAction(props.loanList[row].RequisitionNo, props.loanList[row].status);}}>{props.loanList[row].status}</Button> : null }</TableCell>
                
               </TableRow>
             );

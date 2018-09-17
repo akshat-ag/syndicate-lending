@@ -14,13 +14,17 @@ import Grid from "@material-ui/core/Grid";
 import MultipleSelect from '../presentation/LeadArrangerSelect.js';
 import {NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-// import MultipleSelect from '../views/leadArrangerS.js';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import axios from 'axios';
 const styles = theme => ({
   	container: {
 	    display: 'flex',
 	    flexWrap: 'wrap',
-  	},
+	  },
+	loanForm: {
+		paddingLeft: theme.spacing.unit * 3.5,
+	},
   	textField: {
 	    marginLeft: theme.spacing.unit,
 	    marginRight: theme.spacing.unit,
@@ -92,7 +96,20 @@ class LoanApplication extends Component {
     		return <Redirect push to={`/dashboard`}/>;
   		}
 		return (
-			<Grid container className="loan_app">
+			<div id="loanAppForm">
+				<AppBar position="static" id="dashbRow">
+                <Toolbar id="headerBot">
+                <Typography id="loggedInAs" variant="subheading" color="inherit">
+               			Home / Application / Create
+               			</Typography>
+                <div id="logout">
+                <Typography variant="sunbheading" color="inherit">
+               			Logged in as Borrower
+               			</Typography>
+                </div>
+                </Toolbar>
+            </AppBar>
+			<Grid container className={classes.loanForm}>
 			<Grid item xs={12}>
 			<h3 id="app1"> Application </h3>
 			</Grid>
@@ -227,6 +244,7 @@ class LoanApplication extends Component {
 		 
 		  </Grid>
 		    </Grid>
+			</div>
 			);
 	}
 }

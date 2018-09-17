@@ -27,7 +27,7 @@ class Home extends Component {
 
                 </Switch>
             </div>
-        
+           
             </React.Fragment>
 
         );

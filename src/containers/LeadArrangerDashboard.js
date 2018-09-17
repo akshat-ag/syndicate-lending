@@ -4,10 +4,14 @@ import PendingApplications from '../presentation/BorrowerPendingApplications';
 import BiddingLoans from '../presentation/BiddingLoans';
 import BorrowerAcceptedLoans from '../presentation/BorrowerAcceptedLoans';
 import CustomizedTabs from '../presentation/RequisitionTabs';
+import InformationMemo from '../presentation/InformationMemo';
+import SyndicateLoans from '../presentation/LoansTable';
 import { Redirect } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import _ from 'lodash';
+import Modal from '@material-ui/core/Modal';
+import {NotificationManager} from 'react-notifications';
 import Grid from "@material-ui/core/Grid";
 class LeadArrangerDashboard extends Component {
     constructor(props) {
@@ -17,8 +21,15 @@ class LeadArrangerDashboard extends Component {
             quotedLoans: [],
             acceptedLoans: [],
             biddingLoans: [],
+            syndicateLoans: [],
             loansResolved: false,
-            tabIndex: 0
+            requisitionsResolved: false,
+            tabIndex: 0,
+            generateInfo: false,
+            currentReq: '',
+            bankName: '',
+            checkTC: false,
+            redirectToDashboard: false
     	};
         this.myCallback = this.myCallback.bind(this);
         this.handleAccept = this.handleAccept.bind(this);
@@ -28,29 +39,34 @@ class LeadArrangerDashboard extends Component {
     }
     componentDidMount() {
         const arrangerName = this.authenticedServiceInstance.getUserInfo().orgId;
-        this.setState({arrangerName: arrangerName});
-        let loans =  axios.get('http://delvmplwindpark00:8080/requisitions/la/' + arrangerName)
-        .then(({ data: loanList }) => {
-         // console.log('user', loanList);
-        let approvedLoans = [];
-        let biddingLoans = [];
-        let statusAddedRequisition= {};
-        this.setState({loansResolved: true});
-        for( let i = 0, max = loanList.length; i < max ; i++ ){
-            if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
-                //statusAddedRequisition = this.sortStatus(loanList[i]);
-                approvedLoans.push(loanList[i]);
-            } else if(loanList[i].RequisitionStatus === "Pending"){
-                for(let j=0; j< loanList[i].RoI.length; j++) {
-                    if(loanList[i].RoI[j].BankName === arrangerName && loanList[i].RoI[j].Status === "Pending") {
-                        biddingLoans.push(loanList[i]);
+        const bankName = this.authenticedServiceInstance.getUserInfo().orgName;
+        this.setState({arrangerName: arrangerName, bankName: bankName});
+        let requisitions =  axios.get('http://delvmplwindpark00:8080/requisitions/la/' + arrangerName);
+        let loans = axios.get('http://delvmplwindpark00:8080/la/' + arrangerName + '/loans');
+        requisitions.then(({ data: loanList }) => {
+            let approvedLoans = [];
+            let biddingLoans = [];
+            let statusAddedRequisition= {};
+            this.setState({requisitionsResolved: true});
+            for( let i = 0, max = loanList.length; i < max ; i++ ){
+                if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
+                    statusAddedRequisition = this.sortStatus(loanList[i]);
+                    approvedLoans.push(statusAddedRequisition);
+                } else if(loanList[i].RequisitionStatus === "Pending"){
+                    for(let j=0; j< loanList[i].RoI.length; j++) {
+                        if(loanList[i].RoI[j].BankName === arrangerName && loanList[i].RoI[j].Status === "Pending") {
+                            biddingLoans.push(loanList[i]);
+                        }
                     }
+                    
                 }
-                
-            }
-        } 
-        this.setState({ acceptedLoans: approvedLoans, biddingLoans: biddingLoans });
-                     });
+            } 
+            this.setState({ acceptedLoans: approvedLoans, biddingLoans: biddingLoans });
+        });
+        loans.then(({ data: loanList }) => {
+           this.setState({loansResolved: true});
+           this.setState({ syndicateLoans: loanList });
+        });
     }
     myCallback(loanId){
     	this.setState({
@@ -63,14 +79,17 @@ class LeadArrangerDashboard extends Component {
         // if(this.state.approvedLoans.length >0) {
         //     const newItems = [...this.state.approvedLoans];
         //     for(let i=0; i<this.state.approvedLoans.length; i++) {
-                if(!loan.MemoStatus.LeadArranger &&
-                    !loan.MemoStatus.Borrower) {
+                if(!loan.Memo.LeadArranger &&
+                    !loan.Memo.Borrower) {
                         loan.status = "Generate Memo";
-                } else if(loan.MemoStatus.LeadArranger &&
-                     !loan.MemoStatus.Borrower) {
+                        loan.ActionNeeded = true;
+                } else if(loan.Memo.LeadArranger &&
+                     !loan.Memo.Borrower) {
                         loan.status = "Borrower Confirmation Left";
+                        loan.ActionNeeded = false;
                 } else {
-                    loan.status = "Memo Signed";
+                    loan.status = "Form Syndicate";
+                    loan.ActionNeeded = true;
                 }
             // }
             // this.setState((prevState) => {
@@ -92,7 +111,8 @@ class LeadArrangerDashboard extends Component {
                 this.setState({redirect: true})
               console.log(res);
               console.log(res.data);
-              this.refreshPage();
+              this.setState({redirectToDashboard: true});
+              NotificationManager.success('Success message', 'Rate Quoted');
             });
     };
     handleRate = function(e,prop) { 
@@ -125,11 +145,12 @@ class LeadArrangerDashboard extends Component {
            postObj = this.state.quotedLoans[postObjIndex];
            delete postObj.rateQuoted;
         }
-        axios.post(`http://delvmplwindpark00:8080/citi/${loanId}`, { postObj })
+        axios.put(`http://delvmplwindpark00:8080/citi/${loanId}`, { postObj })
             .then(res => {
               console.log(res);
               console.log(res.data);
-              this.refreshPage();
+              this.setState({redirectToDashboard: true});
+              NotificationManager.error('Error message', 'Requisition Declined');
             });
     }
     refreshPage() {
@@ -156,7 +177,7 @@ class LeadArrangerDashboard extends Component {
                 return   <BorrowerAcceptedLoans heading={accepteddHeader} 
                                                 loanList={this.state.acceptedLoans} 
                                                 showLoan={this.showLoanDetails} 
-                                                generateInfo={this.generateInfo}/>;
+                                                handleAction={this.handleAction}/>;
             default: 
                 throw new Error('Unknown step');
         }
@@ -164,13 +185,46 @@ class LeadArrangerDashboard extends Component {
     handleChange = (event, value) => {
         this.setState({ tabIndex: value });
     };
+    handleAction = (reqNo, status) => {
+        if(status === "Generate Memo") {
+            this.setState({generateInfo: true, currentReq: reqNo});
+        }else if(status === "Form Syndicate") {
+            this.showLoanDetails(reqNo);
+        }
+    }
+    getGenerationMemo = () => {
+        let user = _.find(this.state.acceptedLoans,{ RequisitionNo : this.state.currentReq });
+        return user;
+    }
+    handleClose = () => {
+        this.setState({generateInfo: false, currentReq: ''});
+        return false;
+    }
+    sendMemo = () => {
+        let postObj = {
+            RequisitionNo: this.state.currentReq,
+            MemoUpdated: "LeadArranger"
+        };
+        axios.put(`http://delvmplwindpark00:8080/updateMemo/`,  postObj )
+        .then(res => {
+            this.setState({generateInfo: false, currentReq: ''});
+            this.setState({redirectToDashboard: true});
+            NotificationManager.success('Success message', 'Memo Signed');
+        });
+    }
+    handleCheck = (event) => {
+        this.setState({checkTC: event.target.checked});
+    }
     render() {
        
         console.log(this.state);
    		if (this.state.redirectToTranches && this.state.loanToRedirect) {
     		return <Redirect push to={`/syndicate/${this.state.loanToRedirect}`}/>;
-  		}
-        if(this.state.loansResolved) {
+          }
+        if (this.state.redirectToDashboard) {
+            return <Redirect push to={`/`} />
+        }
+        if(this.state.loansResolved && this.state.requisitionsResolved) {
             return (
                 <div id="leadArrangerDashboard">
                     <div id="requisitionsBank">
@@ -178,10 +232,25 @@ class LeadArrangerDashboard extends Component {
                     <CustomizedTabs handleChange={this.handleChange}
                                     tabIndex={this.state.tabIndex}/>
                     {this.getTabData()}
+                    <Modal
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.generateInfo}
+                        onClose={this.handleClose}>
+                        <InformationMemo 
+                        loan={this.getGenerationMemo()}
+                        handleClick={this.sendMemo} 
+                        bank={this.state.bankName}
+                        handleCheck={this.handleCheck}
+                        checked={this.state.checkTC}/>
+                    </Modal>
                     </div>
                     <div id="loansBank">
                     <h4 id="requis"> Loans </h4>
-                    
+                    <SyndicateLoans  
+                        loanList={this.state.syndicateLoans} 
+                        showLoan={this.showLoanDetails} 
+                        handleAction={this.handleAction}/>
                     </div>
                 </div>
             );

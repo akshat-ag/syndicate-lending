@@ -23,8 +23,14 @@
   font-size: large;
 }
 #main-content {
-  margin-left: 20px;
-  margin-right: 20px;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 51;
+  bottom: 0;
+  background: #F2F4F8;
+  z-index: 10;
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
@@ -33,13 +39,6 @@
 h3 {
   text-align: left;
 }
-.loan_app {
-  /*float: left;*/
-  /*padding-left: 225px;
-  width: 70%;*/
-  width: 80%;
-}
-
 .well_summary {
   height: 60px;
   border: solid 2px lightgrey;
@@ -122,8 +121,12 @@ body {
     /* padding-left: 12px; */
     margin-left: 0px;
 }
+#dashboard {
+  padding-top: 20px;
+}
 #borrowerDashboard {
-  padding-top: 4px;
+  padding-top: 25px;
+  padding-left: 35px;
 }
 .loanRow {
   height: 36px !important;
@@ -174,9 +177,11 @@ body {
 }
 #header {
   min-height: 50px;
+  color: black;
 }
-#syndicateForm {
-  
+
+#requisitionsBank {
+  padding-top: 15px;
 }
 #syndicateForms {
   box-shadow: none;
@@ -190,7 +195,11 @@ body {
   float: right
 }
 #headerr {
-  background-color: #045e8c; 
+  /* background-color: #045e8c;  */
+  /* background-color: #EDEDED; */
+  background-color: rgb(255, 255, 255); 
+  box-shadow: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.13);
 }
 #submtbtn {
   background-color: #09b968;
@@ -217,4 +226,33 @@ body {
 }
 #requis {
   margin-bottom: 0px;
+}
+#loggedIn {
+  float: right;
+}
+#dashbRow {
+  margin-top: -20px;
+  background: white;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.23);
+}
+#headerBot {
+  min-height: 30px;
+  color: black;
+}
+#profilePopper {
+  z-index: 1000;
+}
+#loggedInAs {
+  flex: 1;
+  color: #4F7BFF;
+  padding-bottom: 2px;
+  padding-top: 2px;
+  font-size: 15px;
+}
+#logoHeading {
+  font-family: -webkit-body;
+}
+#loanAppForm {
+  padding-top: 20px;
 }

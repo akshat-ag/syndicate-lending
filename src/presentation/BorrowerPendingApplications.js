@@ -9,10 +9,19 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {NavLink} from 'react-router-dom';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Collapse from '@material-ui/core/Collapse';
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+
+import classnames from 'classnames';
 const styles = theme => ({
    root: {
-    width: '36%',
-    marginTop: theme.spacing.unit * 1.7,
+    width: '100%',
+    marginTop: theme.spacing.unit * 0.7,
     overflowX: 'auto',
   }, table: {
     minWidth: 100,
@@ -31,7 +40,20 @@ const styles = theme => ({
  },
   paddingNone: {
     padding: '1px 56px 1px 24px',
-  }
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+    marginLeft: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      marginRight: -8,
+    },
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
+  },
 });
 
 function PendingApplications(props) {
@@ -47,28 +69,44 @@ function PendingApplications(props) {
         <TableHead>
           <TableRow className={classes.tablehead}>
             <TableCell >Requistion</TableCell>
-            <TableCell numeric>Action</TableCell>
+            <TableCell className={classes.tablecell}>Requsition Amount</TableCell>
+            <TableCell className={classes.tablecell}>Deadline</TableCell>
+             <TableCell className={classes.tablecell}>Action</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+       
+      </Table>
           {(props.loanList.length) ?  Object.keys(props.loanList).map(n => {
             return (
-              <TableRow className={classes.tablerow} key={props.loanList[n].RequisitionNo}>
-                <TableCell padding="none" classes={{paddingNone: classes.paddingNone}}  scope="row">
-                  {`${props.loanList[n].RequisitionNo}`}
-                </TableCell>
-                <TableCell  classes={{paddingNone: classes.paddingNone}}  numeric>
-                <NavLink id="view" to={`/loan/${props.loanList[n].RequisitionNo}`}>View</NavLink>
-                </TableCell>
-              </TableRow>
+            
+              <ExpansionPanel
+             expanded={props.expanded === props.loanList[n].RequisitionNo}
+              onChange={(e) => {props.handleExpandClick(e,props.loanList[n].RequisitionNo)}}
+            >
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography className={classes.heading}>
+                  General settings
+                </Typography>
+                <Typography className={classes.secondaryHeading}>
+                  I am an expansion panel
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography>
+                  Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
+                  feugiat. Aliquam eget maximus est, id dignissim quam.
+                </Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          
+            
+           
             );
-          }) : <TableRow>
+          }) : null}
           
           
-          <TableCell > <h4> No Pending Requisitons Available </h4></TableCell>
-          </TableRow>}
-        </TableBody>
-      </Table>
+          
+        
       </Paper>
       </div>
     );
