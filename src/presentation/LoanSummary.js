@@ -33,10 +33,31 @@ const styles = {
     pap: {
         width: 267
     },
-    iconn: {
+    iconn1: {
         width: 50,
         height: 50,
         marginLeft: 27,
+        marginTop: 20,
+        marginRight: 6,
+    },
+    iconn2: {
+        width: 50,
+        height: 50,
+        marginLeft: 93,
+        marginTop: 20,
+        marginRight: 6,
+    },
+    iconn3: {
+        width: 50,
+        height: 50,
+        marginLeft: 86,
+        marginTop: 20,
+        marginRight: 6,
+    },
+    iconn4: {
+        width: 50,
+        height: 50,
+        marginLeft: 76,
         marginTop: 20,
         marginRight: 6,
     },
@@ -84,14 +105,14 @@ const styles = {
          <Card className={classes.card}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
-          <Typography className= {classes.numberItem} variant="headline">37</Typography>
+          <Typography className= {classes.numberItem} variant="headline">{props.data.totalApplications}</Typography>
           <Typography className= {classes.labelItem} variant="subheading" color="textSecondary">
             Total Applications
           </Typography>
         </CardContent>
         
       </div>
-      <img className={classes.iconn} src={total} alt="Girl in a jacket" />
+      <img className={classes.iconn1} src={total} alt="Girl in a jacket" />
     </Card>
         </Paper>
         </Grid> <Grid  item xs={12} sm={6} md={3}>
@@ -99,42 +120,42 @@ const styles = {
      <Card className={classes.card}>
   <div className={classes.details}>
     <CardContent className={classes.content}>
-    <Typography className= {classes.numberItem} variant="headline">37</Typography>
+    <Typography className= {classes.numberItem} variant="headline">{props.data.pendingLoans}</Typography>
     <Typography className= {classes.labelItem} variant="subheading" color="textSecondary">
         Pending
       </Typography>
     </CardContent>
     
   </div>
-  <img className={classes.iconn} src={pending} alt="Girl in a jacket" />
+  <img className={classes.iconn2} src={pending} alt="Girl in a jacket" />
 </Card>
     </Paper></Grid> <Grid  item xs={12} sm={6} md={3}>
     <Paper className={classes.pap}>
     <Card className={classes.card}>
  <div className={classes.details}>
    <CardContent className={classes.content}>
-   <Typography className= {classes.numberItem} variant="headline">37</Typography>
+   <Typography className= {classes.numberItem} variant="headline">{props.data.approvedLoans}</Typography>
    <Typography className= {classes.labelItem} variant="subheading" color="textSecondary">
        Approved
      </Typography>
    </CardContent>
    
  </div>
- <img className={classes.iconn} src={total} alt="Girl in a jacket" />
+ <img className={classes.iconn3} src={total} alt="Girl in a jacket" />
 </Card>
    </Paper></Grid> <Grid  item xs={12} sm={6} md={4} lg={3}>
    <Paper className={classes.pap}>
    <Card className={classes.card}>
 <div className={classes.details}>
   <CardContent className={classes.content}>
-  <Typography className= {classes.numberItem} variant="headline">37</Typography>
+  <Typography className= {classes.numberItem} variant="headline">{props.data.syndicate}</Typography>
   <Typography className= {classes.labelItem} variant="subheading" color="textSecondary">
       Syndicates
     </Typography>
   </CardContent>
   
 </div>
-<img className={classes.iconn} src={loans} alt="Girl in a jacket" />
+<img className={classes.iconn4} src={loans} alt="Girl in a jacket" />
 </Card>
   </Paper></Grid>
   </Grid>

@@ -17,13 +17,14 @@ const styles = {
     },
     media: {
       height: 0,
-      paddingTop: '56.25%', // 16:9
+      paddingTop: '36.25%', // 16:9
       marginTop: 10
     },
     content: {
-      paddingTop: 20,
+      paddingTop: 10,
       paddingLeft: 15,
-      paddingRight: 0
+      paddingRight: 0,
+      paddingBottom: 0
     },
   };
   function getImage(bankDetails) {

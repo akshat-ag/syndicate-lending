@@ -16,8 +16,8 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 const styles = theme => ({
   root: {
-   width: '90%',
-   marginTop: theme.spacing.unit * 1.2,
+   width: '100%',
+   marginTop: theme.spacing.unit * 0.7,
    overflowX: 'auto',
  }, table: {
    minWidth: 100,

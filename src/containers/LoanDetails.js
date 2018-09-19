@@ -103,11 +103,11 @@ export default class LoanDetails extends React.Component {
 		return (
 			<div >
         		<h3 id="leadSelect"> Select the Lead Arranger </h3>
-				<Grid container id="cardContainer" spacing={16} justify="space-evenly">
+				<Grid container id="cardContainer" spacing={8} justify="space-evenly">
 				
 				{this.state.banksList.map(bank => {
 					return (
-						<Grid item xs={12} sm={2} md={2} >
+						<Grid item xs={12} sm={12} md={3} >
 							
 						<SimpleMediaCard bankDetails={bank} 
 						loanAmt={this.state.loanDetail.RequisitionAmount}

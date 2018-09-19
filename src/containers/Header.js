@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import Notifications from '@material-ui/icons/Notifications';
 import ProfilePopper from '../presentation/ProfilePopper';
+import NotificationPanel from '../presentation/NotificationPanel';
 import IconButton from '@material-ui/core/IconButton';
 const styles = theme => ({
 	tabs: {
@@ -30,13 +31,17 @@ class Header extends React.Component {
 		this.authenticedServiceInstance = AuthenticatedServiceInstance;
 		this.state = {
 			user : {},
-			open: false
+			open: false,
+			openNot: false,
+			pendingLoans: [],
+			notLength: this.authenticedServiceInstance.makeNotifications().length
 		}
 	}
 	componentDidMount() {
 		let user =this.authenticedServiceInstance.getUserInfo();
 		this.setState({user});
 	}
+	
 	handleLogout = () => {
 		this.authenticedServiceInstance.toggleLogin();
 		window.location.reload();
@@ -48,6 +53,9 @@ class Header extends React.Component {
 	handleToggle = () => {
 		this.setState(state => ({ open: !state.open }));
 	}
+	handleTogglePanel = () => {
+		this.setState(state => ({ openNot: !state.openNot }));
+	}
 	handleClose = (event, anchorEl) => {
 		if (anchorEl.contains(event.target)) {
 		  return;
@@ -55,6 +63,18 @@ class Header extends React.Component {
 	
 		this.setState({ open: false });
 	  };
+	  handleClosePanel = (event, anchorEl) => {
+		if (anchorEl.contains(event.target)) {
+		  return;
+		}
+	
+		this.setState({ openNot: false });
+	  };
+	  changeNot = () => {
+		let arr = this.authenticedServiceInstance.makeNotifications();
+		//this.setState({notLength: arr.length});
+		return arr;
+	  }
 	render() {
 		const { classes } = this.props;
 		return (
@@ -69,11 +89,11 @@ class Header extends React.Component {
 						{(this.checkUser() === "borrower") ?
 			            <Tab label="Initiate Application" to='/application' component={NavLink}/> : null}
 		          	</Tabs>
-					  <IconButton aria-label="4 pending messages" className={classes.bellIcon}>
-					  <Badge className={classes.notification} badgeContent={4} color="primary">
-          				<Notifications />
-					</Badge>
-					</IconButton>
+					  <NotificationPanel handleToggle = {this.handleTogglePanel}
+					 					  handleClose = {this.handleClosePanel}
+										  open = {this.state.openNot} 
+										 notLength = {this.state.notLength}
+										  data = {this.changeNot()}/>
 					  <div  id="logout">
 					 
 					

@@ -69,7 +69,7 @@ class SyndicateForm extends React.Component {
             counter: 0,
             redirect: false
         };
-        this.handleOpen = this.handleOpen.bind(this);
+        //this.handleOpen = this.handleOpen.bind(this);
         this.checkDisability = this.checkDisability.bind(this);
     }
     componentDidMount() {
@@ -86,9 +86,7 @@ class SyndicateForm extends React.Component {
 				this.setState({hasError: true});
 			});
     }
-    handleOpen = () => {
-        this.setState({ open: true });
-    }
+    
     handleClose =() => {
         this.setState({ open: false });
     }
@@ -137,6 +135,19 @@ class SyndicateForm extends React.Component {
             return false;
         }
         return true;
+    }
+    checkDisabilityy = () => {
+        if(this.state.trancheNo === '' ||
+            (this.state.trancheNo && this.state.counter === Number(this.state.trancheNo))) {
+            return false;
+        }
+        return true;
+    }
+    handleOpen = () => {
+        let check = this.checkDisabilityy();
+        if(check) {
+            this.setState({ open: true });
+        }
     }
     handleSubmit = () => {
         
@@ -233,7 +244,7 @@ class SyndicateForm extends React.Component {
                                     className={classes.chip}
                                     id="addtranch"
                                     label="Add Tranche"
-                                    clickable= {this.checkDisability()}
+                                    clickable= {false}
                                     color="primary"
                                     onDelete={this.handleOpen}
                                     deleteIcon={<AddIcon />}

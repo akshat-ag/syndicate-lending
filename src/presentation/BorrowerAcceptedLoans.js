@@ -14,8 +14,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 const styles = theme => ({
   root: {
-   width: '90%',
-   marginTop: theme.spacing.unit * 1.2,
+   width: '100%',
+   marginTop: theme.spacing.unit * 0.7,
    overflowX: 'auto',
  }, table: {
    minWidth: 100,

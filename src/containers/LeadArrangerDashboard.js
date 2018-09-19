@@ -8,6 +8,8 @@ import InformationMemo from '../presentation/InformationMemo';
 import SyndicateLoans from '../presentation/LoansTable';
 import { Redirect } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import TodoActivity from '../presentation/TodoActivity';
+import SimpleCard from '../presentation/LoanSummary';
 import axios from 'axios';
 import _ from 'lodash';
 import Modal from '@material-ui/core/Modal';
@@ -22,6 +24,8 @@ class LeadArrangerDashboard extends Component {
             acceptedLoans: [],
             biddingLoans: [],
             syndicateLoans: [],
+            pendingActivites: [],
+            checked: [],
             loansResolved: false,
             requisitionsResolved: false,
             tabIndex: 0,
@@ -46,27 +50,58 @@ class LeadArrangerDashboard extends Component {
         requisitions.then(({ data: loanList }) => {
             let approvedLoans = [];
             let biddingLoans = [];
+            let actionPendingLoans = [];
+            let actionApprovedLoans = [];
+            let actionFormSyndicate =[];
             let statusAddedRequisition= {};
             this.setState({requisitionsResolved: true});
             for( let i = 0, max = loanList.length; i < max ; i++ ){
                 if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
                     statusAddedRequisition = this.sortStatus(loanList[i]);
                     approvedLoans.push(statusAddedRequisition);
+                    if(statusAddedRequisition.Memo.LeadArranger && statusAddedRequisition.Memo.Borrower) {
+                        actionFormSyndicate.push(statusAddedRequisition);
+                    } else if(!statusAddedRequisition.Memo.LeadArranger) {
+                        actionApprovedLoans.push(statusAddedRequisition);
+                    }
                 } else if(loanList[i].RequisitionStatus === "Pending"){
                     for(let j=0; j< loanList[i].RoI.length; j++) {
                         if(loanList[i].RoI[j].BankName === arrangerName && loanList[i].RoI[j].Status === "Pending") {
                             biddingLoans.push(loanList[i]);
+                            actionPendingLoans.push(loanList[i]);
                         }
                     }
                     
                 }
-            } 
+            }
+            this.authenticedServiceInstance.setPendingLoansBank(actionPendingLoans);
+            this.authenticedServiceInstance.setApprovedLoansBank(actionApprovedLoans);
+            this.authenticedServiceInstance.setSynidcateLoansBank(actionFormSyndicate); 
             this.setState({ acceptedLoans: approvedLoans, biddingLoans: biddingLoans });
+            this.calculateNotifications();
         });
         loans.then(({ data: loanList }) => {
            this.setState({loansResolved: true});
            this.setState({ syndicateLoans: loanList });
         });
+    }
+    calculateNotifications = () =>  {
+        let pendingActivites = this.authenticedServiceInstance.getPendingActivities();
+        let approvedActivities = this.authenticedServiceInstance.getApprovedActivities();
+        let syndicateActivities = this.authenticedServiceInstance.getSyndicateActivities();
+        let totalactivites;
+        totalactivites = pendingActivites.concat(approvedActivities);
+        totalactivites = totalactivites.concat(syndicateActivities);
+
+     
+        
+        this.setState({pendingActivites : totalactivites});
+        let arrr = [];
+      // let pendingActivites = [];
+       for(let i=0; i<totalactivites.length; i++) {
+           arrr[i] = false;
+       }
+       this.setState({checked: arrr});
     }
     myCallback(loanId){
     	this.setState({
@@ -173,11 +208,16 @@ class LeadArrangerDashboard extends Component {
                                     changeRate={this.handleRate} 
                                     onAccept={this.handleAccept} 
                                     onDecline={this.handleCancel}/>;
-              case 1: 
+            case 1: 
                 return   <BorrowerAcceptedLoans heading={accepteddHeader} 
                                                 loanList={this.state.acceptedLoans} 
                                                 showLoan={this.showLoanDetails} 
                                                 handleAction={this.handleAction}/>;
+            case 2:
+                return <SyndicateLoans  
+                loanList={this.state.syndicateLoans} 
+                showLoan={this.showLoanDetails} 
+                handleAction={this.handleAction}/>;
             default: 
                 throw new Error('Unknown step');
         }
@@ -215,6 +255,26 @@ class LeadArrangerDashboard extends Component {
     handleCheck = (event) => {
         this.setState({checkTC: event.target.checked});
     }
+    setSummaryData = () => {
+        let arr = [];
+        arr.totalApplications = this.state.biddingLoans.length + this.state.acceptedLoans.length;
+        arr.pendingLoans = this.state.biddingLoans.length;
+        arr.approvedLoans = this.state.acceptedLoans.length;
+        arr.syndicate = this.state.syndicateLoans.length;
+        return arr;
+    }
+    handleChecked = (event, value) => {
+        this.setState((prevState) => {
+            const newItems = [...prevState.checked];
+            newItems[value] = !newItems[value];
+            return {checked: newItems};
+        });
+    }
+    deleteItem = (e,index) => {
+        let arr = this.state.pendingActivites.slice();
+        arr.splice(index, 1);
+        this.setState({pendingActivites: arr});
+    }
     render() {
        
         console.log(this.state);
@@ -227,8 +287,13 @@ class LeadArrangerDashboard extends Component {
         if(this.state.loansResolved && this.state.requisitionsResolved) {
             return (
                 <div id="leadArrangerDashboard">
-                    <div id="requisitionsBank">
-                    <h4 id="requis"> Requisitions </h4>
+                    <Grid container>
+                    <Grid item xs={12} sm={12} md={12}>
+                    <SimpleCard data={this.setSummaryData()}/>
+                    </Grid>
+                        <Grid item xs={12} sm={9} md={9}>
+                        <div id="requisitionsBank">
+                   
                     <CustomizedTabs handleChange={this.handleChange}
                                     tabIndex={this.state.tabIndex}/>
                     {this.getTabData()}
@@ -239,20 +304,22 @@ class LeadArrangerDashboard extends Component {
                         onClose={this.handleClose}>
                         <InformationMemo 
                         loan={this.getGenerationMemo()}
-                        handleClick={this.sendMemo} 
-                        bank={this.state.bankName}
+                        handleClick={this.sendMemo}
                         handleCheck={this.handleCheck}
                         checked={this.state.checkTC}/>
                     </Modal>
                     </div>
-                    <div id="loansBank">
-                    <h4 id="requis"> Loans </h4>
-                    <SyndicateLoans  
-                        loanList={this.state.syndicateLoans} 
-                        showLoan={this.showLoanDetails} 
-                        handleAction={this.handleAction}/>
-                    </div>
-                </div>
+                </Grid>
+                <Grid item xs={12} sm={12} md={3}>
+                <TodoActivity data={this.state.pendingActivites}
+                                role={"bank"}
+                                checked = {this.state.checked}
+                                handleCheck={this.handleChecked}
+                                 handleDelete={this.deleteItem}/>
+                    </Grid>
+                </Grid>
+                
+                   </div>
             );
         }
         else {

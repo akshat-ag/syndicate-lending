@@ -14,10 +14,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 const styles = theme => ({
   root: {
-   width: '90%',
-   marginTop: theme.spacing.unit * 1.7,
-   overflowX: 'auto',
- }, table: {
+    width: '100%',
+    marginTop: theme.spacing.unit * 0.7,
+    overflowX: 'auto',
+ }, 
+ table: {
    minWidth: 100,
  },
  tablehead: {
@@ -84,6 +85,9 @@ function SyndicateLoans(props) {
           
           <TableCell ></TableCell>
           <TableCell > <h4 id="noloan"> No Syndicate Loans Available  </h4></TableCell>
+          <TableCell ></TableCell>
+          <TableCell ></TableCell>
+          <TableCell ></TableCell>
           </TableRow>}
           
         </TableBody>
