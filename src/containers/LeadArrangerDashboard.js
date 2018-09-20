@@ -93,9 +93,13 @@ class LeadArrangerDashboard extends Component {
            let syndLoans = [];
            for(let u = 0; u< loanList.length; u++) {
             statusAddedRequisition = this.findDrawdown(loanList[u]);
+            
             loanList[u].drawdownToBeInitiated = statusAddedRequisition;
+            if(loanList[u].drawdownToBeInitiated !== '') {
+                syndLoans.push(loanList[u]);
+            }
            }
-           this.authenticedServiceInstance.setPendingDrawdownsBank(loanList);
+           this.authenticedServiceInstance.setPendingDrawdownsBank(syndLoans);
            this.setState({ syndicateLoans: loanList });
            let arr = []; let ner = [];
            for(let i=0; i<loanList.length; i++) {
@@ -107,7 +111,7 @@ class LeadArrangerDashboard extends Component {
         });
     }
     findDrawdown = (loan) => {
-        let drawdownNo;
+        let drawdownNo = '';
         dance:
         for(let i=0; i<loan.Tranches.length; i++) {
             for(let j=0; j<loan.Tranches[i].Drawdowns.length; j++) {

@@ -232,7 +232,8 @@ function SyndicateDetail(props) {
         }) : null}
     </Grid>
      </Grid>
-     <Grid container alignItems="center" item xs={12} >
+     {(props.loan.drawdownToBeInitiated !== '') ? 
+      <Grid container alignItems="center" item xs={12} >
         <Button
         variant="contained"
         id="memoBtn"
@@ -241,7 +242,7 @@ function SyndicateDetail(props) {
         >
         Initiate Drawdown
         </Button>
-        </Grid>
+        </Grid> : null }
                 
               
         </Paper>

@@ -77,7 +77,7 @@ function SyndicateLoans(props) {
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].LoanAmount}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
-                <TableCell className={classes.tableNormalcell} ><Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Initiate Drawdown</Button></TableCell>
+                <TableCell className={classes.tableNormalcell} >{(props.loanList[row].drawdownToBeInitiated !== '') ? <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Initiate Drawdown</Button> : <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Loan Details</Button>}</TableCell>
                </TableRow>
             );
           }) : <TableRow>
