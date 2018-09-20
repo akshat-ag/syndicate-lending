@@ -49,7 +49,7 @@ menuItem: {
 }
 
 });
-
+{/* <Badge className={classes.notification}  color="primary">	</Badge> */}
 function NotificationPanel(props){
    const { classes } = props;
     
@@ -66,9 +66,9 @@ function NotificationPanel(props){
             aria-haspopup="true"
             onClick={props.handleToggle}
             className={classes.bellIcon} >
-					  <Badge className={classes.notification} badgeContent={props.data.length} color="primary">
+				
           				<Notifications />
-					</Badge>
+				
 					</IconButton>
          <Popper id="profilePopper" className={classes.popper} open={props.open} anchorEl={anchorEl} transition disablePortal>
             {({ TransitionProps, placement }) => (

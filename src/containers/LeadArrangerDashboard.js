@@ -10,6 +10,7 @@ import { Redirect } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TodoActivity from '../presentation/TodoActivity';
 import SimpleCard from '../presentation/LoanSummary';
+import SyndicateDetail from '../presentation/DrawdownInitiateModal';
 import axios from 'axios';
 import _ from 'lodash';
 import Modal from '@material-ui/core/Modal';
@@ -25,6 +26,8 @@ class LeadArrangerDashboard extends Component {
             biddingLoans: [],
             syndicateLoans: [],
             pendingActivites: [],
+            expanded: [],
+            expandedR: [],
             checked: [],
             loansResolved: false,
             requisitionsResolved: false,
@@ -32,7 +35,10 @@ class LeadArrangerDashboard extends Component {
             generateInfo: false,
             currentReq: '',
             bankName: '',
+            initDrawdown: false,
+            currentLoanNo: '',
             checkTC: false,
+            drawdownToBeInitiated: '',
             redirectToDashboard: false
     	};
         this.myCallback = this.myCallback.bind(this);
@@ -55,6 +61,7 @@ class LeadArrangerDashboard extends Component {
             let actionFormSyndicate =[];
             let statusAddedRequisition= {};
             this.setState({requisitionsResolved: true});
+            if(loanList)
             for( let i = 0, max = loanList.length; i < max ; i++ ){
                 if( loanList[i].RequisitionStatus === "Approved" && loanList[i].ApprovedLA === arrangerName){
                     statusAddedRequisition = this.sortStatus(loanList[i]);
@@ -82,17 +89,45 @@ class LeadArrangerDashboard extends Component {
         });
         loans.then(({ data: loanList }) => {
            this.setState({loansResolved: true});
+           let statusAddedRequisition;
+           let syndLoans = [];
+           for(let u = 0; u< loanList.length; u++) {
+            statusAddedRequisition = this.findDrawdown(loanList[u]);
+            loanList[u].drawdownToBeInitiated = statusAddedRequisition;
+           }
+           this.authenticedServiceInstance.setPendingDrawdownsBank(loanList);
            this.setState({ syndicateLoans: loanList });
+           let arr = []; let ner = [];
+           for(let i=0; i<loanList.length; i++) {
+            arr[i] = false;
+            ner[i] = false;
+            }
+            
+            this.setState({expanded: arr, expandedR: ner});
         });
+    }
+    findDrawdown = (loan) => {
+        let drawdownNo;
+        dance:
+        for(let i=0; i<loan.Tranches.length; i++) {
+            for(let j=0; j<loan.Tranches[i].Drawdowns.length; j++) {
+                if(loan.Tranches[i].Drawdowns[j].DrawdownStatus === "Created") {
+                    drawdownNo = loan.Tranches[i].Drawdowns[j].DrawdownNo;
+                    break dance;
+                }
+            }
+        }
+        return drawdownNo;
     }
     calculateNotifications = () =>  {
         let pendingActivites = this.authenticedServiceInstance.getPendingActivities();
         let approvedActivities = this.authenticedServiceInstance.getApprovedActivities();
         let syndicateActivities = this.authenticedServiceInstance.getSyndicateActivities();
+        let drawdownActivities = this.authenticedServiceInstance.getPendingDrawdownsBankActivites();
         let totalactivites;
         totalactivites = pendingActivites.concat(approvedActivities);
         totalactivites = totalactivites.concat(syndicateActivities);
-
+        totalactivites = totalactivites.concat(drawdownActivities);
      
         
         this.setState({pendingActivites : totalactivites});
@@ -214,10 +249,10 @@ class LeadArrangerDashboard extends Component {
                                                 showLoan={this.showLoanDetails} 
                                                 handleAction={this.handleAction}/>;
             case 2:
-                return <SyndicateLoans  
+                return <SyndicateLoans
                 loanList={this.state.syndicateLoans} 
                 showLoan={this.showLoanDetails} 
-                handleAction={this.handleAction}/>;
+                handleAction={this.initiateDrawdown}/>;
             default: 
                 throw new Error('Unknown step');
         }
@@ -232,8 +267,25 @@ class LeadArrangerDashboard extends Component {
             this.showLoanDetails(reqNo);
         }
     }
+    initiateDrawdown = (loanNo) => {
+        this.setState({initDrawdown: true, currentLoanNo: loanNo});
+    }
     getGenerationMemo = () => {
         let user = _.find(this.state.acceptedLoans,{ RequisitionNo : this.state.currentReq });
+        return user;
+    }
+    clickCard = (cardPlate) => {
+        if(cardPlate === "pending") {
+            this.setState({ tabIndex: 0 });
+        } else if(cardPlate === "approved") {
+            this.setState({ tabIndex: 1 });
+        } if(cardPlate === "syndicate") {
+            this.setState({ tabIndex: 2 });
+        }
+    }
+    getLoanObject = () => {
+        let user = _.find(this.state.syndicateLoans,{ LoanNo : this.state.currentLoanNo });
+
         return user;
     }
     handleClose = () => {
@@ -275,6 +327,30 @@ class LeadArrangerDashboard extends Component {
         arr.splice(index, 1);
         this.setState({pendingActivites: arr});
     }
+    handleClosee = () => {
+        this.setState({initDrawdown: false, currentLoanNo: ''});
+    }
+    handleExpand = (event, value) => {
+        this.setState((prevState) => {
+            const newItems = Array.from([...prevState.expandedR]);
+            
+            newItems[value] = !newItems[value];
+            
+            return {checked: newItems};
+        });
+    }
+    handleDrawdown = (loan) => {
+        let postObj = {
+            LoanNo: loan.LoanNo,
+            DrawdownNo: loan.drawdownToBeInitiated,
+            status: "Initiated"
+        };
+        axios.put(`http://delvmplwindpark00:8080/loan/` + loan.LoanNo + `/drawdown/` + loan.drawdownToBeInitiated,  postObj )
+        .then(res => {
+            this.setState({redirectToDashboard: true});
+            NotificationManager.success('Success message', 'Amount Paid');
+        });
+    }
     render() {
        
         console.log(this.state);
@@ -289,7 +365,8 @@ class LeadArrangerDashboard extends Component {
                 <div id="leadArrangerDashboard">
                     <Grid container>
                     <Grid item xs={12} sm={12} md={12}>
-                    <SimpleCard data={this.setSummaryData()}/>
+                    <SimpleCard data={this.setSummaryData()}
+                                clickCard={this.clickCard}/>
                     </Grid>
                         <Grid item xs={12} sm={9} md={9}>
                         <div id="requisitionsBank">
@@ -307,6 +384,20 @@ class LeadArrangerDashboard extends Component {
                         handleClick={this.sendMemo}
                         handleCheck={this.handleCheck}
                         checked={this.state.checkTC}/>
+                    </Modal>
+                    <Modal
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.initDrawdown}
+                        onClose={this.handleClosee}>
+                        <SyndicateDetail 
+                        loan={this.getLoanObject()}
+                        handleClick={this.sendMemo}
+                        handleCheck={this.handleCheck}
+                        expanded={this.state.expanded}
+                        handleExpand={this.handleExpand}
+                        checked={this.state.checkTC}
+                        handleDrawdown = {this.handleDrawdown}/>
                     </Modal>
                     </div>
                 </Grid>

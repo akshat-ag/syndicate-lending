@@ -66,7 +66,7 @@ function BorrowerAcceptedLoans(props) {
 
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].status}</TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].ActionNeeded ? <Button onClick={() => {props.handleAction(props.loanList[row].RequisitionNo, props.loanList[row].status);}}>{props.loanList[row].status}</Button> : null }</TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].ActionNeeded ? <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].RequisitionNo, props.loanList[row].status);}}>{props.loanList[row].status}</Button> : null }</TableCell>
                
               </TableRow>
             );

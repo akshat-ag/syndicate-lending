@@ -134,7 +134,15 @@ class Dashboard extends Component {
         this.setState({ approvedLoansRowsPerPage: rows, approvedLoansPage: 0 });
         //this.setApprovedViewLoans(rows);
     };
-    
+    clickCard = (cardPlate) => {
+        if(cardPlate === "pending") {
+            this.setState({ tabIndex: 0 });
+        } else if(cardPlate === "approved") {
+            this.setState({ tabIndex: 1 });
+        } if(cardPlate === "syndicate") {
+            this.setState({ tabIndex: 2 });
+        }
+    }
     handleChange = (event, value) => {
         this.setState({ tabIndex: value });
     };
@@ -268,7 +276,8 @@ class Dashboard extends Component {
                 <div id="borrowerDashboard">
                     <Grid container>
                     <Grid item xs={12} sm={12} md={12}>
-                    <SimpleCard data={this.setSummaryData()}/>
+                    <SimpleCard data={this.setSummaryData()}
+                                clickCard = {this.clickCard}/>
                     </Grid>
                         <Grid item xs={12} sm={9} md={8}>
                         <div id="requisitionsBank">

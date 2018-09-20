@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
 import citibank from '../static/images/citibank.png';
 import wellsfargo from '../static/images/wellsfargo.png';
@@ -44,21 +45,21 @@ const styles = {
         width: 50,
         height: 50,
         marginLeft: 93,
-        marginTop: 20,
+       // marginTop: 20,
         marginRight: 6,
     },
     iconn3: {
         width: 50,
         height: 50,
         marginLeft: 86,
-        marginTop: 20,
+        //marginTop: 20,
         marginRight: 6,
     },
     iconn4: {
         width: 50,
         height: 50,
         marginLeft: 76,
-        marginTop: 20,
+        //marginTop: 20,
         marginRight: 6,
     },
     details: {
@@ -102,7 +103,8 @@ const styles = {
       <Grid container item xs={12}>
           <Grid  item xs={12} sm={6} md={3}>
         <Paper className={classes.pap}>
-         <Card className={classes.card}>
+         <Card className={classes.card} >
+         
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography className= {classes.numberItem} variant="headline">{props.data.totalApplications}</Typography>
@@ -113,11 +115,13 @@ const styles = {
         
       </div>
       <img className={classes.iconn1} src={total} alt="Girl in a jacket" />
+     
     </Card>
         </Paper>
         </Grid> <Grid  item xs={12} sm={6} md={3}>
      <Paper className={classes.pap}>
      <Card className={classes.card}>
+     <ButtonBase  onClick={() => props.clickCard("pending")}>
   <div className={classes.details}>
     <CardContent className={classes.content}>
     <Typography className= {classes.numberItem} variant="headline">{props.data.pendingLoans}</Typography>
@@ -128,10 +132,12 @@ const styles = {
     
   </div>
   <img className={classes.iconn2} src={pending} alt="Girl in a jacket" />
+  </ButtonBase>
 </Card>
     </Paper></Grid> <Grid  item xs={12} sm={6} md={3}>
     <Paper className={classes.pap}>
     <Card className={classes.card}>
+    <ButtonBase  onClick={() => props.clickCard("approved")}>
  <div className={classes.details}>
    <CardContent className={classes.content}>
    <Typography className= {classes.numberItem} variant="headline">{props.data.approvedLoans}</Typography>
@@ -142,10 +148,12 @@ const styles = {
    
  </div>
  <img className={classes.iconn3} src={total} alt="Girl in a jacket" />
+ </ButtonBase>
 </Card>
    </Paper></Grid> <Grid  item xs={12} sm={6} md={4} lg={3}>
    <Paper className={classes.pap}>
    <Card className={classes.card}>
+   <ButtonBase  onClick={() => props.clickCard("syndicate")}>
 <div className={classes.details}>
   <CardContent className={classes.content}>
   <Typography className= {classes.numberItem} variant="headline">{props.data.syndicate}</Typography>
@@ -156,6 +164,7 @@ const styles = {
   
 </div>
 <img className={classes.iconn4} src={loans} alt="Girl in a jacket" />
+</ButtonBase>
 </Card>
   </Paper></Grid>
   </Grid>

@@ -74,7 +74,7 @@ export default class LoanDetails extends React.Component {
 	}
 	render() {
 		if(this.state.redirect === true) {
-			return <Redirect push to={`/dashboard`}/>;
+			return <Redirect push to={`/`}/>;
 		}
 		console.log(this.state);
 		const checkBanks = () => {

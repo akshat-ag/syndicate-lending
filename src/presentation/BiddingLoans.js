@@ -24,15 +24,24 @@ const styles = theme => ({
  },tablehead: {
   height: theme.spacing.unit * 5
 },tablecell: {
-    padding: '1px 28px 1px 19px',
+    padding: '1px 19px 1px 19px',
     fontWeight: 500,
     fontSize: theme.spacing.unit * 1.7
 },
 tableNormalcell: {
-  padding: '1px 28px 1px 19px',
+  padding: '1px 19px 1px 19px',
+  width: 0
+},
+interestRate: {
+  width: 80
 },
  paddingNone: {
    padding: '1px 56px 1px 24px',
+ },
+ button: {
+  minHeight: '20px',
+  height: '30px',
+  paddingTop: '6px'
  }
 });
 function BiddingLoans(props) {
@@ -51,9 +60,9 @@ function BiddingLoans(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow className={classes.tablehead}>
-            <TableCell className={classes.tablecell}>Requisition Id</TableCell>
+            <TableCell className={classes.tablecell}> Id</TableCell>
             <TableCell className={classes.tablecell}>Borrower</TableCell>
-            <TableCell className={classes.tablecell}>Requisition Amount</TableCell>
+            <TableCell className={classes.tablecell}> Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
             <TableCell className={classes.tablecell}></TableCell>
@@ -74,6 +83,7 @@ function BiddingLoans(props) {
 
                 <TableCell className={classes.tableNormalcell}>
                 <TextField
+                className={classes.interestRate}
                 required
                 id="simple-start-adornment"
                 value={rate}
@@ -83,8 +93,8 @@ function BiddingLoans(props) {
                 }}
               />
                 </TableCell>
-                <TableCell className={classes.tableNormalcell}><Button id="acceptBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button></TableCell>
-                <TableCell className={classes.tableNormalcell}><Button variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
+                <TableCell className={classes.tableNormalcell}><Button className={classes.button} id="acceptBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button></TableCell>
+                <TableCell className={classes.tableNormalcell}><Button className={classes.button} variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
               </TableRow>
             );
           }) : <TableRow>

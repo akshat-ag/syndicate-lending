@@ -28,7 +28,7 @@ const styles = theme => ({
   padding: '1px 28px 1px 19px',
 },
 tablerow: {
-  height: theme.spacing.unit * 3.9
+  height: theme.spacing.unit * 5
 },
 tableToolbar: {
   height: theme.spacing.unit * 3.5,
@@ -63,7 +63,7 @@ function SyndicateLoans(props) {
             <TableCell className={classes.tablecell}>Loan Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
-            <TableCell className={classes.tablecell}>Status</TableCell>
+            <TableCell className={classes.tablecell}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -77,7 +77,7 @@ function SyndicateLoans(props) {
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].LoanAmount}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].LoanStatus}</TableCell>
+                <TableCell className={classes.tableNormalcell} ><Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Initiate Drawdown</Button></TableCell>
                </TableRow>
             );
           }) : <TableRow>

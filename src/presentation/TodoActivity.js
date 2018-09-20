@@ -111,6 +111,9 @@ const styles = theme => ({
           let str = "Form Syndicate for " + loan.RequisitionNo;
           return str;
         }
+    } else if(loan.LoanStatus === "Syndication Formed") {
+      let str = "Accept Drawdown for " + loan.LoanNo;
+      return str;
     }
   }
   }

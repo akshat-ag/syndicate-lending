@@ -9,6 +9,7 @@ class AuthenticationService {
         this.pendingLoansBank = [];
         this.approvedLoansBank = [];
         this.synidcateLoansBank = [];
+        this.pendingDrawdownsBank = [];
         this.users = [{
             "id" : "1",
             "name" : "Mukesh Ambani",
@@ -149,6 +150,10 @@ class AuthenticationService {
         notifications.push("Memo signature recieved for " + this.synidcateLoansBank[0].RequisitionNo);
         else if(this.pendingLoansBank.length > 1)
         notifications.push(this.synidcateLoansBank.length + " new Requisitions available for bidding");
+        if(this.pendingDrawdownsBank.length === 1)
+        notifications.push("Accept Drawdwon for " + this.pendingDrawdownsBank[0].LoanNo);  
+        else if(this.pendingDrawdownsBank.length > 1)
+        notifications.push(this.pendingDrawdownsBank.length + " new Loans available for Accepting Drawdwons");
         return notifications;
     }
 
@@ -198,6 +203,12 @@ class AuthenticationService {
     }
     setSynidcateLoansBank(loans) {
         this.synidcateLoansBank = loans;
+    }
+    setPendingDrawdownsBank(loans) {
+        this.pendingDrawdownsBank = loans;
+    }
+    getPendingDrawdownsBankActivites() {
+        return this.pendingDrawdownsBank;
     }
 }
 // let keyword will ensure that we are always throwing back the single class instance

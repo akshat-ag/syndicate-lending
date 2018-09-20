@@ -16,6 +16,8 @@ import TranchesOverview from '../presentation/TranchesOverview.js';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import {NotificationManager} from 'react-notifications';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
@@ -23,12 +25,12 @@ import moment from 'moment';
 const styles = theme => ({
     layout: {
         width: 'auto',
-        marginLeft: theme.spacing.unit * 0,
+        marginLeft: theme.spacing.unit * 2,
         marginRight: theme.spacing.unit * 2,
-        marginTop: theme.spacing.unit * 0.4,
+        marginTop: theme.spacing.unit * 2.4,
         [theme.breakpoints.up(900 + theme.spacing.unit * 2 * 2)]: {
             width: 900,
-            marginLeft: theme.spacing.unit * 0,
+            marginLeft: theme.spacing.unit * 2,
             marginRight: 'auto',
         },
     },
@@ -199,6 +201,19 @@ class SyndicateForm extends React.Component {
         // }
         if (this.state.loanDetail) {
             return (
+                <div className="syndicateScreen">
+                    <AppBar position="static" id="dashbRow">
+                <Toolbar id="headerBot">
+                <Typography id="loggedInAs" variant="subheading" color="inherit">
+                Home / Loan / Syndicate Formation
+               			</Typography>
+                <div id="logout">
+                <Typography variant="sunbheading" color="inherit">
+               			Logged in as Bank
+               			</Typography>
+                </div>
+                </Toolbar>
+            </AppBar>
                 <div id="syndicateForm" className={classes.layout}>
                     <Grid container>
                         <Grid item xs={12} sm={12} md={12}>
@@ -287,15 +302,30 @@ class SyndicateForm extends React.Component {
                         </Grid>
                     </Grid>
                 </div>
+                </div>
             );
         }
         else {
-            return <Grid container id="loader" justify="center" alignItems="center">
+            return <div className="syndicateScreen"> 
+                <AppBar position="static" id="dashbRow">
+                <Toolbar id="headerBot">
+                <Typography id="loggedInAs" variant="subheading" color="inherit">
+               			Home / Loan / Syndicate Formation
+               			</Typography>
+                <div id="logout">
+                <Typography variant="sunbheading" color="inherit">
+               			Logged in as Bank
+               			</Typography>
+                </div>
+                </Toolbar>
+            </AppBar>
+            <Grid container id="loader" justify="center" alignItems="center">
                 <Grid container item xs={12} justify="center">
                     <CircularProgress size={50} thickness={4} />
                 </Grid>
 
             </Grid>
+            </div>
         }
     }
 }
