@@ -103,7 +103,7 @@ class LoanApplication extends Component {
                			Home / Application / Create
                			</Typography>
                 <div id="logout">
-                <Typography variant="sunbheading" color="inherit">
+                <Typography id="loggedInAs" variant="subheading" color="inherit">
                			Logged in as Borrower
                			</Typography>
                 </div>
@@ -228,7 +228,7 @@ class LoanApplication extends Component {
         			
 		     	 </Grid>
 		     	 <Grid item container justify="flex-start" xs={12}>
-			<Button type="submit" variant="contained" color="primary" id="submitBtn">
+			<Button type="submit" variant="contained" id="submitBtn">
         		Send
         	<Icon className={classes.rightIcon}>send</Icon>
      		 </Button>

@@ -28,7 +28,7 @@ class Dashboard extends Component {
                			Home / Dashboard
                			</Typography>
                 <div id="logout">
-                <Typography variant="sunbheading" color="inherit">
+                <Typography id="loggedInAs" variant="subheading" color="inherit">
                			Logged in as Borrower
                			</Typography>
                 </div>
@@ -46,7 +46,7 @@ class Dashboard extends Component {
                			Home / Dashboard
                			</Typography>
                 <div id="logout">
-                <Typography variant="sunbheading" color="inherit">
+                <Typography id="loggedInAs" variant="subheading" color="inherit">
                			Logged in as Bank
                			</Typography>
                 </div>

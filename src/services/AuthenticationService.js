@@ -210,6 +210,33 @@ class AuthenticationService {
     getPendingDrawdownsBankActivites() {
         return this.pendingDrawdownsBank;
     }
+    findDrawdown = (loan) => {
+        let drawdownNo = '';
+        dance:
+        for(let i=0; i<loan.Tranches.length; i++) {
+            for(let j=0; j<loan.Tranches[i].Drawdowns.length; j++) {
+                if(loan.Tranches[i].Drawdowns[j].DrawdownStatus === "Created") {
+                    drawdownNo = loan.Tranches[i].Drawdowns[j].DrawdownNo;
+                    break dance;
+                }
+            }
+        }
+        return drawdownNo;
+    }
+    findDrawdownPaid = (loan) => {
+        let drawdownObj = {};
+        dance:
+        for(let i=0; i<loan.Tranches.length; i++) {
+            for(let j=0; j<loan.Tranches[i].Drawdowns.length; j++) {
+                if(loan.Tranches[i].Drawdowns[j].DrawdownStatus === "Initiated") {
+                    drawdownObj.drawdownNo = loan.Tranches[i].Drawdowns[j].DrawdownNo;
+                    drawdownObj.drawdownAmount = loan.Tranches[i].Drawdowns[j].DrawdownAmount;
+                    break dance;
+                }
+            }
+        }
+        return drawdownObj;
+    }
 }
 // let keyword will ensure that we are always throwing back the single class instance
 export let AuthenticatedServiceInstance = new AuthenticationService();

@@ -23,16 +23,21 @@ const styles = theme => ({
   height: theme.spacing.unit * 5
 },
 tablecell: {
-  padding: '1px 28px 1px 19px',
+  padding: '1px 15px 1px 15px',
   fontWeight: 500,
   fontSize: theme.spacing.unit * 1.7
 },
 tableNormalcell: {
-  padding: '1px 28px 1px 19px',
+  padding: '1px 15px 1px 15px',
 },
  paddingNone: {
    padding: '1px 56px 1px 24px',
- }
+ },
+ btn: {
+  fontSize: 13,
+  padding: 0,
+  color: '#007BFF'
+}
 });
 function BorrowerAcceptedLoans(props) {
   const {classes} = props;
@@ -61,11 +66,21 @@ function BorrowerAcceptedLoans(props) {
                 </TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
                 
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{"$ " + props.loanList[row].RequisitionAmount}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
 
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].status}</TableCell>
+                <TableCell className={classes.tableNormalcell} >
+                <Tooltip title="Click here to View History">
+                <Button
+                    className={classes.btn}
+                    onClick={() => {props.handleViewHistory(props.loanList[row].RequisitionNo);}}
+                >
+                {props.loanList[row].status}
+                </Button>
+                  
+                  </Tooltip>
+                 </TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ActionNeeded ? <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].RequisitionNo, props.loanList[row].status);}}>{props.loanList[row].status}</Button> : null }</TableCell>
                
               </TableRow>

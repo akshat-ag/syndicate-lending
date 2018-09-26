@@ -7,17 +7,27 @@ import axios from 'axios';
 import _ from 'lodash';
 import Modal from '@material-ui/core/Modal';
 import CustomizedTabs from '../presentation/RequisitionTabs';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 import Demo from '../presentation/ReactGridExample';
-import ReactTablee from '../presentation/ReactTableExample';
+// import ReactTablee from '../presentation/ReactTableExample';
+import SyndicateDetail from '../presentation/DrawdownInitiateModal';
 import SyndicateLoans from '../presentation/LoansTable';
 import InformationMemo from '../presentation/InformationMemo';
 import TodoActivity from '../presentation/TodoActivity';
 import SimpleCard from '../presentation/LoanSummary';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
 import {NotificationManager} from 'react-notifications';
 import LoanDetails from './LoanDetails';
 import Grid from "@material-ui/core/Grid";
+import TimelineComponent from '../presentation/TimelineComponent.js';
 const names = [
     {name: 'CitiBank',
     value: 'citi'},
@@ -26,6 +36,18 @@ const names = [
     {name: 'JP Morgan',
       value: 'jp'}
   ];
+const styles = theme => ({
+    todoActivity: {
+        marginLeft: theme.spacing.unit * 3,
+        marginTop: 15
+    },
+    content : {
+        display: 'inline-flex',
+    },
+    card : {
+        boxShadow: 'none'
+    }
+});
 class Dashboard extends Component {
     constructor(props) {
         super(props);
@@ -35,11 +57,17 @@ class Dashboard extends Component {
             approvedLoansPage: 0,
             approvedLoans: [],
             approvedLoansView: [],
+            redirectToApplication: false,
             pendingActivites: [],
             syndicateLoans: [],
+            expanded: [],
+            expandedR: [],
+            initDrawdown: false,
             checked: [],
+            currentLoanNo: '',
             tabIndex: 0,
             currentReq: '',
+            openHistory: false,
             bankName: '',
             checkTC: false,
             redirectToDashboard: false,
@@ -55,7 +83,7 @@ class Dashboard extends Component {
         let user = this.authenticedServiceInstance.getUserInfo();
         let role = user.orgId;
         let requisitions =  axios.get(`http://delvmplwindpark00:8080/requisitions/` + role);
-        let loans = axios.get('http://delvmplwindpark00:8080/la/' + role + '/loans');
+        let loans = axios.get('http://delvmplwindpark00:8080/borrower/' + role + '/loans');
         requisitions.then(({ data: loanList }) => {
                 let statusAddedRequisition= {};
                 let approvedLoans = [];
@@ -90,6 +118,23 @@ class Dashboard extends Component {
             loans.then(({ data: loanList }) => {
                 this.setState({loansResolved: true});
                 this.setState({ syndicateLoans: loanList });
+                let arr = []; let ner = [];
+                for(let i=0; i<loanList.length; i++) {
+                 arr[i] = false;
+                 ner[i] = false;
+                 }
+                 let statusAddedRequisition;
+                 for(let u = 0; u< loanList.length; u++) {
+                    statusAddedRequisition = this.authenticedServiceInstance.findDrawdown(loanList[u]);
+                    
+                    loanList[u].drawdownToBeInitiated = statusAddedRequisition;
+                    
+                    if(loanList[u].drawdownToBeInitiated !== '') {
+                        loanList[u].currStatus = 'Pay Drawdown';
+                    } else 
+                        loanList[u].currStatus = 'Paid full';
+                   }
+                 this.setState({expanded: arr, expandedR: ner});
              });
     }
     calculateNotifications = () =>  {
@@ -115,6 +160,9 @@ class Dashboard extends Component {
     		redirect: true,
     		loanToRedirect: loanId
     	});
+    }
+    handleClosee = () => {
+        this.setState({initDrawdown: false, currentLoanNo: ''});
     }
     setApprovedViewLoans = () => {
         
@@ -169,13 +217,19 @@ class Dashboard extends Component {
         return false;
     };
     getGenerationMemo = () => {
-        let user = _.find(this.state.approvedLoans,{ RequisitionNo : this.state.currentReq });
-        if(user) {
-            let name =_.find(names,{ value : user.ApprovedLA });
-            user.bankName = name.name;
+        let user;
+        if(this.state.historyType === 'loan') {
+            user = _.find(this.state.syndicateLoans,{ LoanNo : this.state.currentReq });
+            return user;
         }
-        
-        return user;
+        else {
+            let user = _.find(this.state.approvedLoans,{ RequisitionNo : this.state.currentReq });
+            if(user) {
+                let name =_.find(names,{ value : user.ApprovedLA });
+                user.bankName = name.name;
+            }
+            return user;
+        }
     }
     getExpandProp(loanNo, expandedObj) {
         if(loanNo === expandedObj.index) {
@@ -215,11 +269,17 @@ class Dashboard extends Component {
         let obj={};
         for(let i=0; i< this.state.pendingLoans.length; i++) {
             arr.push({RequisitionNo: this.state.pendingLoans[i].RequisitionNo,
-                Amount: this.state.pendingLoans[i].RequisitionAmount,
+                Amount: "$ " + this.state.pendingLoans[i].RequisitionAmount,
                 StartDate: this.state.pendingLoans[i].StartDate,
                 EndDate: this.state.pendingLoans[i].EndDate})
         }
+        //this.setState({pendingLoanRows: arr});
         return arr;
+    }
+    
+    
+    initiateDrawdown = (loanNo) => {
+        this.setState({initDrawdown: true, currentLoanNo: loanNo});
     }
     getRowData = function(row) {
         return <LoanDetails loanNo= {row.RequisitionNo} />;
@@ -245,12 +305,15 @@ class Dashboard extends Component {
                     page={this.state.approvedLoansPage}
                     handleChangePage={this.handleChangePage}
                     handleAction={this.handleAction}
+                    handleViewHistory={this.handleViewHistory}
                     handleChangeRowsPerPage={this.handleChangeRowsPerPage}/>;
                 case 2:
                     return <SyndicateLoans  
                     loanList={this.state.syndicateLoans} 
-                    showLoan={this.showLoanDetails} 
-                    handleAction={this.handleAction}/>;
+                    showLoan={this.showLoanDetails}
+                    handleViewHistory={this.handleViewHistory}
+                    role={"borrower"}
+                    handleAction={this.initiateDrawdown}/>;
             default: 
                 throw new Error('Unknown step');
         }
@@ -263,13 +326,43 @@ class Dashboard extends Component {
         arr.syndicate = this.state.syndicateLoans.length;
         return arr;
     }
+    getLoanObject = () => {
+        let user;
+        if(this.state.currentLoanNo)
+        user = _.find(this.state.syndicateLoans,{ LoanNo : this.state.currentLoanNo });
+        
+        return user;
+    }
+    handleExpand = (event, value) => {
+        this.setState((prevState) => {
+            const newItems = Array.from([...prevState.expandedR]);
+            
+            newItems[value] = !newItems[value];
+            
+            return {checked: newItems};
+        });
+    }
+    handleOpenApp = () => {
+        this.setState({redirectToApplication: true});
+    }
+    handleViewHistory = (reqNo, type) => {
+        this.setState({openHistory: true, currentReq: reqNo, historyType: type});
+    }
+    handleCloseHistory = () => {
+        this.setState({openHistory: false, currentReq: ''});
+        return false;
+    }
     render() {
+        const {classes} = this.props;
         console.log(this.state);
    		if (this.state.redirect && this.state.loanToRedirect) {
     		return <Redirect push to={`/loan/${this.state.loanToRedirect}`}/>;
           }
           if(this.state.redirectToDashboard) {
             return <Redirect push to={`/`}/>;
+          }
+          if(this.state.redirectToApplication) {
+            return <Redirect push to={`/application`}/>;
           }
         if(this.state.approvedLoans && this.state.pendingLoans) {
             return (
@@ -296,14 +389,52 @@ class Dashboard extends Component {
                         handleCheck={this.handleCheck}
                         checked={this.state.checkTC}/>
                     </Modal>
+                    <Modal
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.initDrawdown}
+                        scroll='body'
+                        onClose={this.handleClosee}>
+                    <SyndicateDetail 
+                        loan={this.getLoanObject()}
+                        handleClick={this.sendMemo}
+                        role={"borrower"}
+                        handleCheck={this.handleCheck}
+                        onClose={this.handleClosee}
+                        expanded={this.state.expanded}
+                        handleExpand={this.handleExpand}
+                        checked={this.state.checkTC}
+                        handleDrawdown = {this.handleDrawdown}/>
+                        </Modal>
+                        <Modal
+                            aria-labelledby="simple-modal-title"
+                            aria-describedby="simple-modal-description"
+                            open={this.state.openHistory}
+                            onClose={this.handleCloseHistory}>
+                            <TimelineComponent 
+                            loanNo = {this.getGenerationMemo() ? this.getGenerationMemo() : null} />
+                        </Modal>
                     </div>
                 </Grid>
-                <Grid item xs={12} sm={12} md={4}>
-                   <TodoActivity data={this.state.pendingActivites}
+                <Grid item container xs={12} sm={12} md={4}>
+                <Grid item  xs={10} sm={10} md={10} className={classes.todoActivity}>
+                <Paper className="pap">
+                <Card className={classes.card}>
+              <CardContent className={classes.content}>
+               <Button variant="fab" id="initAppBtn" aria-label="Add" onClick={this.handleOpenApp}>
+                <AddIcon /> 
+                 </Button>
+               <Typography  id="initAppLabel" variant="heading">Initiate Application</Typography>
+                </CardContent>
+               </Card>
+               </Paper>
+               <TodoActivity data={this.state.pendingActivites}
                                 role= {"borrower"}
                                 checked = {this.state.checked}
                                 handleCheck={this.handleChecked}
                                  handleDelete={this.deleteItem}/>
+                    </Grid>
+                  
                     </Grid>
                 </Grid>
                 </div>
@@ -321,4 +452,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default withStyles(styles)(Dashboard);

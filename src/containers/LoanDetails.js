@@ -81,7 +81,7 @@ export default class LoanDetails extends React.Component {
 			if(this.state.banksList.length) {
 				console.log("aa");
 				return (<Grid item container xs={12}  justify="center" id="declineall">
-			<Button variant="contained" color="secondary" onClick={this.declineAll}>
+			<Button variant="contained" id="memoBtn" onClick={this.declineAll}>
 				Decline All
 			</Button>
 			 </Grid>)
@@ -118,7 +118,7 @@ export default class LoanDetails extends React.Component {
 				})}
 				
 				</Grid>
-			{checkBanks()} 
+			
         </div>);
 	}
 }

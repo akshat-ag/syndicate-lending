@@ -44,6 +44,21 @@ interestRate: {
   paddingTop: '6px'
  }
 });
+function checkRateQuoted(loan, bank) {
+  for(let j=0; j< loan.RoI.length; j++) {
+    if(loan.RoI[j].BankName === bank && loan.RoI[j].Status === "Pending") {
+        return true;
+    }
+}
+return false;
+}
+function getRateQuoted(loan,bank) {
+  for(let j=0; j< loan.RoI.length; j++) {
+    if(loan.RoI[j].BankName === bank) {
+        return loan.RoI[j].Rate;
+    }
+}
+}
 function BiddingLoans(props) {
   const {classes} = props;
   let rate;
@@ -78,10 +93,11 @@ function BiddingLoans(props) {
                 </TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].FirstName + " " + props.loanList[row].LastName}</TableCell>
                 
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].RequisitionAmount}</TableCell>
+                <TableCell className={classes.tableNormalcell} >{"$ " + props.loanList[row].RequisitionAmount}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
-
+              
                 <TableCell className={classes.tableNormalcell}>
+                {(checkRateQuoted(props.loanList[row], props.bankUser)) ?
                 <TextField
                 className={classes.interestRate}
                 required
@@ -91,10 +107,11 @@ function BiddingLoans(props) {
                 InputProps={{
                   endAdornment: <InputAdornment position="end">%</InputAdornment>,
                 }}
-              />
+              /> : getRateQuoted(props.loanList[row], props.bankUser) + "%"}
                 </TableCell>
-                <TableCell className={classes.tableNormalcell}><Button className={classes.button} id="acceptBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button></TableCell>
-                <TableCell className={classes.tableNormalcell}><Button className={classes.button} variant="contained" color="secondary" onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button></TableCell>
+                <TableCell className={classes.tableNormalcell}> {(checkRateQuoted(props.loanList[row], props.bankUser)) ? <Button className={classes.button} id="memoBtn" type="submit" onClick={() => {props.onAccept(props.loanList[row].RequisitionNo);}}>Accept</Button> : "Quoted" }</TableCell>
+                <TableCell className={classes.tableNormalcell}>{(checkRateQuoted(props.loanList[row], props.bankUser)) ?  <Button className={classes.button} id="memoBtn" variant="contained"  onClick={() => {props.onDecline(props.loanList[row].RequisitionNo);}}>Decline</Button>  : "" }</TableCell>
+             
               </TableRow>
             );
           }) : <TableRow>

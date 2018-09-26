@@ -76,6 +76,8 @@ class Header extends React.Component {
 		return arr;
 	  }
 	render() {
+		// {(this.checkUser() === "borrower") ?
+		// <Tab label="Initiate Application" to='/application' component={NavLink}/> : null}
 		const { classes } = this.props;
 		return (
 			 <div >
@@ -86,8 +88,7 @@ class Header extends React.Component {
                			</Typography>
                			<Tabs className={classes.tabs}>
 			            <Tab label="Home"  to='/' component={NavLink}/>
-						{(this.checkUser() === "borrower") ?
-			            <Tab label="Initiate Application" to='/application' component={NavLink}/> : null}
+						
 		          	</Tabs>
 					  <NotificationPanel handleToggle = {this.handleTogglePanel}
 					 					  handleClose = {this.handleClosePanel}

@@ -6,6 +6,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import Divider from '@material-ui/core/Divider';
+
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
@@ -15,6 +17,7 @@ import Input from '@material-ui/core/Input';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -32,6 +35,7 @@ const styles = theme => ({
         },
       },
       paper: {
+        height: '550px',
         marginTop: theme.spacing.unit * 3,
         marginBottom: theme.spacing.unit * 3,
         padding: theme.spacing.unit * 2,
@@ -40,6 +44,7 @@ const styles = theme => ({
           marginBottom: theme.spacing.unit * 6,
           padding: theme.spacing.unit * 3,
         },
+        overflowY: 'auto'
       },
       container: {
         marginTop: theme.spacing.unit * 0.5,
@@ -73,6 +78,7 @@ function SyndicateDetail(props) {
     const {classes} = props;
   return (
     <React.Fragment>
+       
        <main className={classes.layout}>
       
         <Paper className={classes.paper}>
@@ -155,7 +161,7 @@ function SyndicateDetail(props) {
         <ExpansionPanelSummary  expandIcon={<ExpandMoreIcon />} 
                                 expanded= {props.expanded[n] !== false}
                                 onChange={(e) => props.handleExpand(e, n)}>
-          <Typography className={classes.heading}>{'Tranche ' + n}</Typography>
+          <Typography className={classes.heading}>{'Tranche ' + (Number(n) + 1)}</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
         <Grid container  className={classes.container}>
@@ -232,7 +238,7 @@ function SyndicateDetail(props) {
         }) : null}
     </Grid>
      </Grid>
-     {(props.loan.drawdownToBeInitiated !== '') ? 
+     {(props.loan.drawdownToBeInitiated !== '' && props.role === "bank") ? 
       <Grid container alignItems="center" item xs={12} >
         <Button
         variant="contained"

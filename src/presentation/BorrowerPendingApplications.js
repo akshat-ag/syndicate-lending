@@ -71,6 +71,7 @@ function PendingApplications(props) {
             <TableCell >Requistion</TableCell>
             <TableCell className={classes.tablecell}>Requsition Amount</TableCell>
             <TableCell className={classes.tablecell}>Deadline</TableCell>
+           
              <TableCell className={classes.tablecell}>Action</TableCell>
           </TableRow>
         </TableHead>

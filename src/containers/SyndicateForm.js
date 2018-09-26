@@ -13,6 +13,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import TranchesOverview from '../presentation/TranchesOverview.js';
+import TrancheView from '../presentation/ViewTranche.js';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -68,6 +69,8 @@ class SyndicateForm extends React.Component {
             trancheNo: '',
             trancheStartDate: '',
             trancheEndDate: '',
+            currentTranche: '',
+            openn: false,
             counter: 0,
             redirect: false
         };
@@ -91,6 +94,9 @@ class SyndicateForm extends React.Component {
     
     handleClose =() => {
         this.setState({ open: false });
+    }
+    handleClosee =() => {
+        this.setState({ openn: false , currentTranche: ''});
     }
     setTrancheNo = event => {
         let trancheNo = event.target.value;
@@ -150,6 +156,9 @@ class SyndicateForm extends React.Component {
         if(check) {
             this.setState({ open: true });
         }
+    }
+    setViewTrache = (e,tranche) => {
+        this.setState({ openn: true , currentTranche: tranche});
     }
     handleSubmit = () => {
         
@@ -281,9 +290,20 @@ class SyndicateForm extends React.Component {
                                 </Modal>
                                 <Grid item xs={12} className={classes.chip}>
                                 <TranchesOverview trancheList={this.state.tranches}
+                                    handleView= {this.handleView}
                                     totaltranches={this.state.tranches.length}
                                     page={this.state.tranchesPage}
+                                    handleClick = {this.setViewTrache}
                                     />
+                                    <Modal
+                                    aria-labelledby="simple-modal-title"
+                                    aria-describedby="simple-modal-description"
+                                    open={this.state.openn}
+                                    onClose={this.handleClosee}>
+                                    <TrancheView 
+                                    tranche={this.state.currentTranche}
+                                    />
+                                </Modal>
                                     </Grid>
                                     <Grid item xs={12} >
                                     <Button

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
+  import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -15,11 +15,15 @@ import total from '../static/images/total.png';
 import pending from '../static/images/pending.png';
 import loans from '../static/images/loans.png';
 import IconButton from '@material-ui/core/IconButton';
+import Book from '@material-ui/icons/Book';
+import Assignment from '@material-ui/icons/Assignment';
+import AssignmentTurnedIn from '@material-ui/icons/AssignmentTurnedIn';
 import Grid from '@material-ui/core/Grid';
 const styles = {
     card: {
         display: 'flex',
-        width: 270
+        width: 270,
+        boxShadow: 'none'
       },
     media: {
       height: 0,
@@ -31,9 +35,10 @@ const styles = {
     //   paddingLeft: 15,
     //   paddingRight: 0
     // },
-    pap: {
-        width: 267
-    },
+      pap: {
+          width: 267,
+          boxShadow: '0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 2px 0px 0px rgba(0, 0, 0, 0.14), 0px 3px 0px -2px rgba(0, 0, 0, 0.12)'
+      },
     iconn1: {
         width: 50,
         height: 50,
@@ -73,11 +78,13 @@ const styles = {
       },
       numberItem: {
           color: "#007bff",
-           fontWeight: 500
+           fontWeight: 500,
+           textAlign: 'left'
       },
       labelItem: {
         color: "#000000",
-         fontWeight: 200
+         fontWeight: 400,
+         textAlign: 'left'
     }
   };
  
@@ -114,7 +121,8 @@ const styles = {
         </CardContent>
         
       </div>
-      <img className={classes.iconn1} src={total} alt="Girl in a jacket" />
+      <Book className={classes.iconn1} style={{color: '#1E79D3'}} />
+      
      
     </Card>
         </Paper>
@@ -131,7 +139,8 @@ const styles = {
     </CardContent>
     
   </div>
-  <img className={classes.iconn2} src={pending} alt="Girl in a jacket" />
+  <Assignment className={classes.iconn2} style={{color: '#26DAD2'}}/>
+ 
   </ButtonBase>
 </Card>
     </Paper></Grid> <Grid  item xs={12} sm={6} md={3}>
@@ -147,7 +156,7 @@ const styles = {
    </CardContent>
    
  </div>
- <img className={classes.iconn3} src={total} alt="Girl in a jacket" />
+ <AssignmentTurnedIn className={classes.iconn3} style={{color: '#FFB64D'}}/>
  </ButtonBase>
 </Card>
    </Paper></Grid> <Grid  item xs={12} sm={6} md={4} lg={3}>

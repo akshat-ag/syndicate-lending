@@ -82,7 +82,7 @@ const styles = {
             </Typography>
           </CardContent>
           {(props.bankDetails.Status === "Rate Quoted") ?  <CardActions>
-            <Button size="small" variant="contained" id="acceptBtn" onClick={acceptCallback}>
+            <Button size="small" variant="contained" id="memoBtn" onClick={acceptCallback}>
               Accept
             </Button>
             

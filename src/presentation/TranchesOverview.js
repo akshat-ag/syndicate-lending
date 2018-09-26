@@ -79,7 +79,7 @@ function TranchesOverview(props) {
                 <TableCell numeric>{props.trancheList[row].StartDate}</TableCell>
                 <TableCell numeric>{props.trancheList[row].EndDate}</TableCell>
                 <TableCell numeric>{getParticipants(props.trancheList[row].Participants)}</TableCell>
-                <TableCell numeric><button>View</button></TableCell>
+                <TableCell numeric><button onClick={(e) => props.handleClick(e,props.trancheList[row])}>View</button></TableCell>
               </TableRow>
             );
           })

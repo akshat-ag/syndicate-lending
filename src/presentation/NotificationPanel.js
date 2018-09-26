@@ -36,7 +36,7 @@ const styles = theme => ({
   },
   bellIcon: {
     marginRight: theme.spacing.unit*2,
-    paddingTop: theme.spacing.unit*1,
+    paddingTop: theme.spacing.unit*0.2,
 },
 menuItem: {
     fontSize: 16,

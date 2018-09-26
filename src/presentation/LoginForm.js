@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import FormControl from '@material-ui/core/FormControl'
 import Input from '@material-ui/core/Input'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
 import InputLabel from '@material-ui/core/InputLabel'
 import LockIcon from '@material-ui/icons/LockOutlined'
 import Paper from '@material-ui/core/Paper'
@@ -76,6 +78,7 @@ function LoginForm(props) {
                 // restrictedPattern={/^[0-9*#+]+$/} 
                 updateData={props.updateData}
               />
+              
               <Button
                 type="submit"
                 fullWidth
@@ -97,3 +100,18 @@ function LoginForm(props) {
   }
 
 export default withStyles(styles)(LoginForm);
+{/* <FormControl >
+                <InputLabel htmlFor="age-simple">Select your Role</InputLabel>
+                <Select
+                  value={props.role}
+                  onChange={(e) => {props.handleChange(e)}}
+                  inputProps={{
+                    name: 'age',
+                    id: 'age-simple',
+                  }}
+                >
+                
+                <MenuItem value={10}>Borrower</MenuItem>
+                <MenuItem value={20}>Bank</MenuItem>
+          </Select>
+        </FormControl> */}

@@ -7,15 +7,27 @@ import CustomizedTabs from '../presentation/RequisitionTabs';
 import InformationMemo from '../presentation/InformationMemo';
 import SyndicateLoans from '../presentation/LoansTable';
 import { Redirect } from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TodoActivity from '../presentation/TodoActivity';
 import SimpleCard from '../presentation/LoanSummary';
+import Slide from '@material-ui/core/Slide';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
 import SyndicateDetail from '../presentation/DrawdownInitiateModal';
+import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 import _ from 'lodash';
 import Modal from '@material-ui/core/Modal';
 import {NotificationManager} from 'react-notifications';
 import Grid from "@material-ui/core/Grid";
+import TimelineComponent from '../presentation/TimelineComponent.js';
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
+  
 class LeadArrangerDashboard extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +48,7 @@ class LeadArrangerDashboard extends Component {
             currentReq: '',
             bankName: '',
             initDrawdown: false,
+            openHistory: false,
             currentLoanNo: '',
             checkTC: false,
             drawdownToBeInitiated: '',
@@ -74,11 +87,10 @@ class LeadArrangerDashboard extends Component {
                 } else if(loanList[i].RequisitionStatus === "Pending"){
                     for(let j=0; j< loanList[i].RoI.length; j++) {
                         if(loanList[i].RoI[j].BankName === arrangerName && loanList[i].RoI[j].Status === "Pending") {
-                            biddingLoans.push(loanList[i]);
-                            actionPendingLoans.push(loanList[i]);
+                           actionPendingLoans.push(loanList[i]);
                         }
                     }
-                    
+                    biddingLoans.push(loanList[i]);
                 }
             }
             this.authenticedServiceInstance.setPendingLoansBank(actionPendingLoans);
@@ -92,12 +104,15 @@ class LeadArrangerDashboard extends Component {
            let statusAddedRequisition;
            let syndLoans = [];
            for(let u = 0; u< loanList.length; u++) {
-            statusAddedRequisition = this.findDrawdown(loanList[u]);
+            statusAddedRequisition = this.authenticedServiceInstance.findDrawdown(loanList[u]);
             
             loanList[u].drawdownToBeInitiated = statusAddedRequisition;
+            
             if(loanList[u].drawdownToBeInitiated !== '') {
                 syndLoans.push(loanList[u]);
-            }
+                loanList[u].currStatus = 'Pay Drawdown';
+            } else 
+                loanList[u].currStatus = 'Paid full';
            }
            this.authenticedServiceInstance.setPendingDrawdownsBank(syndLoans);
            this.setState({ syndicateLoans: loanList });
@@ -110,19 +125,7 @@ class LeadArrangerDashboard extends Component {
             this.setState({expanded: arr, expandedR: ner});
         });
     }
-    findDrawdown = (loan) => {
-        let drawdownNo = '';
-        dance:
-        for(let i=0; i<loan.Tranches.length; i++) {
-            for(let j=0; j<loan.Tranches[i].Drawdowns.length; j++) {
-                if(loan.Tranches[i].Drawdowns[j].DrawdownStatus === "Created") {
-                    drawdownNo = loan.Tranches[i].Drawdowns[j].DrawdownNo;
-                    break dance;
-                }
-            }
-        }
-        return drawdownNo;
-    }
+    
     calculateNotifications = () =>  {
         let pendingActivites = this.authenticedServiceInstance.getPendingActivities();
         let approvedActivities = this.authenticedServiceInstance.getApprovedActivities();
@@ -237,6 +240,7 @@ class LeadArrangerDashboard extends Component {
     		loanToRedirect: loanId
     	});  
     }
+    
     getTabData = () =>  {
         const biddingHeader = "Loan(s) for Bidding";
         const accepteddHeader = "Borrower Accepted Loans";
@@ -245,22 +249,33 @@ class LeadArrangerDashboard extends Component {
               return  <BiddingLoans heading={biddingHeader} 
                                     loanList={this.state.biddingLoans} 
                                     changeRate={this.handleRate} 
-                                    onAccept={this.handleAccept} 
+                                    onAccept={this.handleAccept}
+                                    bankUser = {this.state.arrangerName}
                                     onDecline={this.handleCancel}/>;
             case 1: 
                 return   <BorrowerAcceptedLoans heading={accepteddHeader} 
                                                 loanList={this.state.acceptedLoans} 
-                                                showLoan={this.showLoanDetails} 
+                                                showLoan={this.showLoanDetails}
+                                                handleViewHistory={this.handleViewHistory} 
                                                 handleAction={this.handleAction}/>;
             case 2:
                 return <SyndicateLoans
                 loanList={this.state.syndicateLoans} 
-                showLoan={this.showLoanDetails} 
+                showLoan={this.showLoanDetails}
+                role={"bank"}
+                handleViewHistory={this.handleViewHistory}
                 handleAction={this.initiateDrawdown}/>;
             default: 
                 throw new Error('Unknown step');
         }
     };
+    handleViewHistory = (reqNo, type) => {
+        this.setState({openHistory: true, currentReq: reqNo, historyType: type});
+    }
+    handleCloseHistory = () => {
+        this.setState({openHistory: false, currentReq: ''});
+        return false;
+    }
     handleChange = (event, value) => {
         this.setState({ tabIndex: value });
     };
@@ -275,8 +290,18 @@ class LeadArrangerDashboard extends Component {
         this.setState({initDrawdown: true, currentLoanNo: loanNo});
     }
     getGenerationMemo = () => {
-        let user = _.find(this.state.acceptedLoans,{ RequisitionNo : this.state.currentReq });
-        return user;
+        let user;
+        if(this.state.historyType === 'loan') {
+            user = _.find(this.state.syndicateLoans,{ LoanNo : this.state.currentReq });
+            return user;
+        }
+        else {
+            user = _.find(this.state.acceptedLoans,{ RequisitionNo : this.state.currentReq });
+            if(user) {
+                return user;
+            }
+        }
+        
     }
     clickCard = (cardPlate) => {
         if(cardPlate === "pending") {
@@ -288,8 +313,10 @@ class LeadArrangerDashboard extends Component {
         }
     }
     getLoanObject = () => {
-        let user = _.find(this.state.syndicateLoans,{ LoanNo : this.state.currentLoanNo });
-
+        let user;
+        if(this.state.currentLoanNo)
+        user = _.find(this.state.syndicateLoans,{ LoanNo : this.state.currentLoanNo });
+        
         return user;
     }
     handleClose = () => {
@@ -393,16 +420,25 @@ class LeadArrangerDashboard extends Component {
                         aria-labelledby="simple-modal-title"
                         aria-describedby="simple-modal-description"
                         open={this.state.initDrawdown}
+                        scroll='body'
                         onClose={this.handleClosee}>
-                        <SyndicateDetail 
+                    <SyndicateDetail 
                         loan={this.getLoanObject()}
-                        handleClick={this.sendMemo}
-                        handleCheck={this.handleCheck}
+                        role={"bank"}
+                        onClose={this.handleClosee}
                         expanded={this.state.expanded}
                         handleExpand={this.handleExpand}
                         checked={this.state.checkTC}
                         handleDrawdown = {this.handleDrawdown}/>
-                    </Modal>
+                        </Modal>
+                        <Modal
+                            aria-labelledby="simple-modal-title"
+                            aria-describedby="simple-modal-description"
+                            open={this.state.openHistory}
+                            onClose={this.handleCloseHistory}>
+                            <TimelineComponent 
+                            loanNo = {this.getGenerationMemo() ? this.getGenerationMemo() : null} />
+                        </Modal>
                     </div>
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>

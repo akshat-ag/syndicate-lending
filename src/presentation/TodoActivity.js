@@ -28,10 +28,13 @@ const styles = theme => ({
     card: {
         width: '100%'
     },
-    todoActivity: {
-        marginLeft: theme.spacing.unit * 3,
+    todoActivity1: {
         marginTop: 15
     },
+    todoActivity2: {
+      marginLeft: theme.spacing.unit * 3,
+      marginTop: 15
+  },
     media: {
       height: 0,
       paddingTop: '36.25%', // 16:9
@@ -117,66 +120,78 @@ const styles = theme => ({
     }
   }
   }
+  function getContent(props) {
+    const {classes} = props;
+    return  <Card className={classes.card}>
+    <CardHeader  className={classes.header} 
+                 subheader ="To-do List" 
+                 subheaderTypographyProps = {{className: classes.title}}/>
+     
+     
+    
+    <CardContent className={classes.cardContent}>
+    <Table className={classes.table}>
+    
+    <TableBody>
+      {(props.data.length) ?
+              Object.keys(props.data).map(value => { return (
+                <TableRow key={value.ReqNo} className={classes.tableRow}>
+                  <TableCell className={classes.tableCell}>
+                  <Checkbox
+                checked={props.checked[value] !== false}
+                value="checkedB"
+                onChange={(e) => props.handleCheck(e, value)}
+                color="primary"
+              />
+                  </TableCell>
+                  <TableCell className={classes.tableCellV}>
+                    {getCellValue(props.data[value], props.role)}
+                    
+                  </TableCell>
+                  <TableCell id="removeTooltip" className={classes.tableActions}>
+                  <Tooltip
+                      id="tooltip-top-start"
+                      title="Remove"
+                      placement="top"
+                    >
+                      <IconButton
+                        aria-label="Close"
+                        onClick={(e) => props.handleDelete(e,value)}
+                      >
+                        <Close/>
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              )})
+            : <TableRow>
+     
+      <TableCell > <h4 id="noloan"> No Pending Tasks  </h4></TableCell>
+     
+      </TableRow>}
+      
+    </TableBody>
+    
+    </Table>
+    </CardContent>
+    </Card>
+  }
   function TodoActivity(props) {
     const { classes } = props;
     console.log(props.bankDetails + "hey");
-    return (
-      <Grid container item xs={10} className={classes.todoActivity}>
-        
-        <Card className={classes.card}>
-<CardHeader  className={classes.header} 
-             subheader ="To-do List" 
-             subheaderTypographyProps = {{className: classes.title}}/>
- 
- 
-
-<CardContent className={classes.cardContent}>
-<Table className={classes.table}>
-
-<TableBody>
-  {(props.data.length) ?
-          Object.keys(props.data).map(value => { return (
-            <TableRow key={value.ReqNo} className={classes.tableRow}>
-              <TableCell className={classes.tableCell}>
-              <Checkbox
-            checked={props.checked[value] !== false}
-            value="checkedB"
-            onChange={(e) => props.handleCheck(e, value)}
-            color="primary"
-          />
-              </TableCell>
-              <TableCell className={classes.tableCellV}>
-                {getCellValue(props.data[value], props.role)}
-                
-              </TableCell>
-              <TableCell id="removeTooltip" className={classes.tableActions}>
-              <Tooltip
-                  id="tooltip-top-start"
-                  title="Remove"
-                  placement="top"
-                >
-                  <IconButton
-                    aria-label="Close"
-                    onClick={(e) => props.handleDelete(e,value)}
-                  >
-                    <Close/>
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          )})
-        : <TableRow>
- 
-  <TableCell > <h4 id="noloan"> No Pending Tasks  </h4></TableCell>
- 
-  </TableRow>}
-  
-</TableBody>
-
-</Table>
-</CardContent>
-</Card></Grid>
+    if(props.role === "borrower") {
+    return (<Grid container item xs={12} className={classes.todoActivity1}>
+       { getContent(props)}
+       </Grid>
     );
+  }
+    else if(props.role === 'bank') {
+      return (<Grid container item xs={10} className={classes.todoActivity2}>
+        { getContent(props)}
+        </Grid>
+     );
+    }
+    
   }
  
   export default withStyles(styles)(TodoActivity);

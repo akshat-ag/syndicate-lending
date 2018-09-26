@@ -11,9 +11,11 @@ class Login extends Component {
             redirectToReferrer: false,
             username: '',
             password: '',
-            error: false
+            error: false,
+            role: ''
         };
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.updateData = this.updateData.bind(this);
         this.passwordValidation = this.passwordValidation.bind(this);
     }
@@ -34,7 +36,10 @@ class Login extends Component {
             e.preventDefault();
         }
     }
-
+    handleChange(e) {
+        let value = e.target.value;
+        this.setState({role: value});
+    }
     updateData(key, value) {
         this.setState({ [key]: value }, () => {
         });
