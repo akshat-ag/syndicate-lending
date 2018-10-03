@@ -70,6 +70,7 @@ function SyndicateLoans(props) {
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
             <TableCell className={classes.tablecell}>Status</TableCell>
             <TableCell className={classes.tablecell}>Action</TableCell>
+            <TableCell className={classes.tablecell}>View History</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -84,17 +85,22 @@ function SyndicateLoans(props) {
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
                 <TableCell className={classes.tableNormalcell} >
+                {props.loanList[row].currStatus}
+                
+                  
+                  </TableCell>
+                <TableCell className={classes.tableNormalcell} >{(props.loanList[row].drawdownToBeInitiated !== '' && props.role !== "borrower") ? <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Initiate Drawdown</Button> : <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Loan Details</Button>}</TableCell>
+                <TableCell className={classes.tableNormalcell} >
                 <Tooltip title="Click here to View History">
                 <Button
                     className={classes.btn}
                     onClick={() => {props.handleViewHistory(props.loanList[row].LoanNo, 'loan');}}
                 >
-                {props.loanList[row].currStatus}
+                View
                 </Button>
                 </Tooltip>
                   
                   </TableCell>
-                <TableCell className={classes.tableNormalcell} >{(props.loanList[row].drawdownToBeInitiated !== '' && props.role !== "borrower") ? <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Initiate Drawdown</Button> : <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].LoanNo);}}>Loan Details</Button>}</TableCell>
                </TableRow>
             );
           }) : <TableRow>

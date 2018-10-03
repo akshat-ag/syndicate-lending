@@ -59,7 +59,7 @@ class Demo extends React.Component {
             className="viewHistoryBtn"
             onClick={() => this.handleResetClick({ index: index })}
         >
-           Pending
+           View
         </Button>
         </Tooltip>
     );
@@ -82,7 +82,7 @@ class Demo extends React.Component {
         { name: 'Amount', title: 'Amount' },
         { name: 'StartDate', title: 'StartDate' },
         { name: 'EndDate', title: 'Deadline' },
-        { name: 'Status', title: 'Status'}
+        { name: 'Status', title: 'View History'}
       ]
     const  rows = this.getLoanList(this.props.loanList);
     //const { rows, columns, expandedRowIds } = this.state;

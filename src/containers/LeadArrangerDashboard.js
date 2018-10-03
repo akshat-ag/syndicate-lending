@@ -412,6 +412,7 @@ class LeadArrangerDashboard extends Component {
                         onClose={this.handleClose}>
                         <InformationMemo 
                         loan={this.getGenerationMemo()}
+                        bank={this.state.arrangerName}
                         handleClick={this.sendMemo}
                         handleCheck={this.handleCheck}
                         checked={this.state.checkTC}/>

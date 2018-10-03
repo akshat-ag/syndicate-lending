@@ -191,6 +191,7 @@ body {
 }
 #syndicateForms {
   box-shadow: none;
+  background: #F2F4F8;
 }
 #syndiWell {
   padding: 10px 0px 10px 6px;
@@ -218,7 +219,7 @@ body {
 }
 .wellText {
   font-family: -WEBKIT-PICTOGRAPH;
-  font-style: italic;
+  /* font-style: italic; */
   font-size: 18px;
 }
 #logout {

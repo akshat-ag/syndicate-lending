@@ -18,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Book from '@material-ui/icons/Book';
 import Assignment from '@material-ui/icons/Assignment';
 import AssignmentTurnedIn from '@material-ui/icons/AssignmentTurnedIn';
+import Receipt from '@material-ui/icons/Receipt';
 import Grid from '@material-ui/core/Grid';
 const styles = {
     card: {
@@ -172,7 +173,7 @@ const styles = {
   </CardContent>
   
 </div>
-<img className={classes.iconn4} src={loans} alt="Girl in a jacket" />
+<Receipt className={classes.iconn3} style={{color: '#FFB64D'}}/>
 </ButtonBase>
 </Card>
   </Paper></Grid>

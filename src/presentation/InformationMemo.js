@@ -11,6 +11,15 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
+function getBankName(LeadArranger) {
+  if(LeadArranger === 'citi') {
+      return 'CitiBank';
+    } else if(LeadArranger === 'wells') {
+      return 'Wells Fargo';
+    } else if(LeadArranger === 'jp') {
+      return 'JP Morgan';
+    }
+}
 const styles = theme => ({
     
       layout: {
@@ -56,7 +65,7 @@ function InformationMemo(props) {
         Lead Arranger
         </Typography>
         <Typography variant="body2" gutterBottom align="center">
-        {props.bank ? props.bank : props.loan.bankName}
+        {props.bank ? getBankName(props.bank) : props.loan.bankName}
         </Typography> 
         </Grid>
         <Grid item xs={12} sm={6} >

@@ -69,6 +69,7 @@ function ApprovedLoans(props) {
             <TableCell className={classes.tablecell}>Interest Rate</TableCell>
             <TableCell className={classes.tablecell}>Status</TableCell>
             <TableCell className={classes.tablecell}>Action</TableCell>
+            <TableCell className={classes.tablecell}>View History</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -83,17 +84,22 @@ function ApprovedLoans(props) {
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].EndDate}</TableCell>
                 <TableCell className={classes.tableNormalcell} >{props.loanList[row].ApprovedRoI + "%"}</TableCell>
                 <TableCell className={classes.tableNormalcell} >
+                {props.loanList[row].status}
+                
+                  </TableCell>
+                <TableCell className={classes.tableNormalcell} >{props.loanList[row].ActionNeeded ? <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].RequisitionNo, props.loanList[row].status);}}>{props.loanList[row].status}</Button> : "No Action Needed" }</TableCell>
+                <TableCell className={classes.tableNormalcell} >
                 <Tooltip title="Click here to View History">
                 <Button
                     className={classes.btn}
                     onClick={() => {props.handleViewHistory(props.loanList[row].RequisitionNo);}}
                 >
-                {props.loanList[row].status}
+                View
                 </Button>
-                  
-                  </Tooltip>
+                </Tooltip>
+                
                   </TableCell>
-                <TableCell className={classes.tableNormalcell} >{props.loanList[row].ActionNeeded ? <Button id="memoBtn" onClick={() => {props.handleAction(props.loanList[row].RequisitionNo, props.loanList[row].status);}}>{props.loanList[row].status}</Button> : "No Action Needed" }</TableCell>
+                
               </TableRow>
             );
           }) : <TableRow>
