@@ -26,9 +26,6 @@ A step by step series of examples that tell you how to get a development env run
 
 See also the list of [contributors](https://github.com/akshat-ag/syndicate-lending/contributors) who participated in this project.
 
-## License
-
-This project is private property of Publicis.Sapient.
 
 ## Acknowledgments
 
